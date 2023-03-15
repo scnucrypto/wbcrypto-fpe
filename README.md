@@ -49,3 +49,14 @@ $ sudo make install
 $ gcc test.c -o test -lwbcrypto -Wl,-rpath="/usr/local/lib"
 ```
 
+
+
+## 额外能力
+
+### MySQL的UDF函数
+
+在当面目录下的/udf下
+
+### 伪透明代理服务
+
+在当面目录下的/py下
