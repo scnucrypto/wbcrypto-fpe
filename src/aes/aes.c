@@ -4,6 +4,7 @@ WBCRYPTO_aes_context *WBCRYPTO_aes_context_init(){
     struct aes_context *ctx=malloc(sizeof(struct aes_context));
     if(ctx==NULL){
         WBCRYPTO_THROW_REASON("WBCRYPTO_aes_context_init",WBCRYPTO_ERR_ALLOC_FAILED);
+        goto cleanup;
     }
     memset(ctx,0,sizeof(struct aes_context));
     return ctx;

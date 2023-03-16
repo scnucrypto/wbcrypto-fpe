@@ -62,12 +62,6 @@ char *fpe(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length,
 
     if (args->arg_count == 3) {
         sample = args->args[2];
-        if (plain_len != args->lengths[2] && strcmp(mode, "address") != 0) {
-            char msg[200];
-            sprintf(msg, "sample should be as long as plain, plain: %s, sample: %s", plain, sample);
-            strcpy(error, msg);
-            return NULL;
-        }
     }
 
     memcpy(initid->ptr, plain, plain_len);
