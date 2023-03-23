@@ -44,7 +44,7 @@ add_library(wbcrypto-static ${wbcrypto_src})
 SET_TARGET_PROPERTIES(wbcrypto-static PROPERTIES OUTPUT_NAME "wbcrypto")
 
 # dynamic library
-add_library(wbcrypto SHARED ${wbcrypto_src} src/fpe_app/utf8_util.h src/fpe_app/utf8_util.c)
+add_library(wbcrypto SHARED ${wbcrypto_src})
 
 # install the header and library files to the environment
 install(DIRECTORY ${WBCRYPTO_INCLUDE_DIR}/ ${WBMATRIX_INCLUDE_DIR}/ DESTINATION include)

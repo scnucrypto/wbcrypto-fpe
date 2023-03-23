@@ -68,6 +68,7 @@ def get_admin_students():
     print("[admin] 执行的sql语句为：",sql)
     cursor.execute(sql)
     # 将结果转换为 JSON 格式
+    results = []
     for row in cursor.fetchall():
         result = {}
         for i, col in enumerate(cursor.column_names):
