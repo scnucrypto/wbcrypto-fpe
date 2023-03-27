@@ -1,5 +1,7 @@
 # FPE密码库
 
+**标准：https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-38G.pdf**
+
 本密码算法库提供FPE（FF1和FF3-1）的加解密接口。中国手机号、身份证号和中文字符（姓名和地址）的加解密接口。
 
 ## 概述
