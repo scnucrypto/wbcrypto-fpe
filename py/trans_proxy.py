@@ -34,17 +34,17 @@ def process_sql(sql):
     sql = re.sub(r'SELECT\s+\*\s+', 'SELECT ' + ', '.join(stud_fields) + ' ', sql, flags=re.IGNORECASE)
     version = get_mysql_version()
     fields = {
-        'phone': "fpe(phone, 'phone', '123xxxx1234') as phone",
+        'phone': "fpe(phone, 'phone', '123****1234') as phone",
         'address': "fpe(address, 'address') as address",
         'name': "fpe(name, 'name') as name",
-        'idcard': "fpe(idcard, 'idcard', '1111xxxxxxxxxx1234') as idcard"
+        'idcard': "fpe(idcard, 'idcard', '1111**********1234') as idcard"
     }  # 定义特殊字段及其 UDF 函数
     if version == 8:
         fields = {
-            'phone': "cast(fpe(phone, 'phone', '123xxxx1234') as char) as phone",
+            'phone': "cast(fpe(phone, 'phone', '123****1234') as char) as phone",
             'address': "cast(fpe(address, 'address') as char) as address",
             'name': "cast(fpe(name, 'name') as char) as name",
-            'idcard': "cast(fpe(idcard, 'idcard', '1111xxxxxxxxxx1234') as char) as idcard"
+            'idcard': "cast(fpe(idcard, 'idcard', '1111**********1234') as char) as idcard"
         }  # 定义特殊字段及其 UDF 函数
     for field, udf in fields.items():
         if field in sql.lower():

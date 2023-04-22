@@ -52,15 +52,15 @@ $ cmake -DMYSQL8=1 ..
 ### 使用
 ```asm
 ## mysql 5.x版本
-> SELECT fpe('13912345678','phone', '134xxxx5678');
-> SELECT fpe('441412345678901234','idcard', '4414xxxxxxxxxx1234');
-> SELECT fpe('广东省广州市天河区华南师范大学','address', 'xx省xx市xx区xxxxxx');
+> SELECT fpe('13912345678','phone', '134****5678');
+> SELECT fpe('441412345678901234','idcard', '4414**********1234');
+> SELECT fpe('广东省广州市天河区华南师范大学','address', '**省**市**区*****');
 
 ## mysql 8.x版本
-> SELECT cast(fpe('13912345678','phone', '134xxxx5678') as char);
+> SELECT cast(fpe('13912345678','phone', '134****56788') as char);
 
 ## 使用fpe查询数据表（假设存在test数据表，数据列为phone）
-> SELECT fpe(phone,'phone', '134xxxx5678') from test limit 100;
+> SELECT fpe(phone,'phone', '134****5678') from test limit 100;
 ```
 
 ### 测试
@@ -71,14 +71,14 @@ $ cmake -DMYSQL8=1 ..
 > SELECT *, UNIX_TIMESTAMP() - @start_time AS elapsed_time FROM test LIMIT 10000;
 
 ## 查询fpe函数速度
-> SELECT BENCHMARK(1000000, fpe('13912345678','phone', '134xxxx5678'));
+> SELECT BENCHMARK(1000000, fpe('13912345678','phone', '134****5678'));
 ```
 
 ```asm
 ## 例子
 > SELECT phone, UNIX_TIMESTAMP() - @start_time AS elapsed_time FROM test LIMIT 100000;
-> SELECT fpe(phone,'phone','123xxxx4567'), UNIX_TIMESTAMP() - @start_time AS elapsed_time FROM test LIMIT 100000;
+> SELECT fpe(phone,'phone','134****5678'), UNIX_TIMESTAMP() - @start_time AS elapsed_time FROM test LIMIT 100000;
 
-> SELECT BENCHMARK(100000, fpe('13912345678','phone', '134xxxx5678'));
+> SELECT BENCHMARK(100000, fpe('13912345678','phone', '134****5678'));
 ```
 

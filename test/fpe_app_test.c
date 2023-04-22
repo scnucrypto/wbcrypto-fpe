@@ -11,7 +11,7 @@ int test_fpe_phone() {
             0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
     };
     const char input[] = "13888888888";
-    const char sample[] = "138xxxxxxxx";
+    const char sample[] = "138********";
     char cipher[20] = {0};
     char plain[20] = {0};
     clock_t program_start, program_end;
@@ -45,7 +45,7 @@ int test_fpe_idcard() {
             0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
     };
     const char input[] = "40000000000000000X";
-    const char sample[] = "4412xxxxxxxxxx1234";
+    const char sample[] = "4412**********1234";
     char cipher[20] = {0};
     char plain[20] = {0};
     clock_t program_start, program_end;
@@ -79,7 +79,7 @@ int test_fpe_address() {
             0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
     };
     const char input[] = "广东省广州市天河区华南师范大学";
-    const char sample[] = "xx省xx市xx区xxxxx";
+    const char sample[] = "**省**市**区*****";
     char cipher[100] = {0};
     char plain[100] = {0};
     clock_t program_start, program_end;

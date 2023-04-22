@@ -12,7 +12,7 @@ int aux_fpe_phone(WBCRYPTO_fpe_app_context *ctx, char *phone, char *sample, char
 
     if (strcmp(sample, "") != 0) {
         for (i = 0; i < len; i++) {
-            if (sample[i] != 'x') {
+            if (sample[i] != '*') {
                 ++tweak_len;
             }
         }
@@ -23,7 +23,7 @@ int aux_fpe_phone(WBCRYPTO_fpe_app_context *ctx, char *phone, char *sample, char
     tweak[tweak_len] = '\0';
     char ans[len - tweak_len];
     for (i = 0, j = 0, k = 0; i < len; i++) {
-        if (strcmp(sample, "") != 0 && sample[i] != 'x') {
+        if (strcmp(sample, "") != 0 && sample[i] != '*') {
             tweak[k++] = phone[i];
         } else {
             input[j++] = phone[i];
@@ -43,7 +43,7 @@ int aux_fpe_phone(WBCRYPTO_fpe_app_context *ctx, char *phone, char *sample, char
     (*block)(fpe_ctx, input, ans);
 
     for (i = 0, j = 0; i < len; i++) {
-        if (strcmp(sample, "") != 0 && sample[i] != 'x') {
+        if (strcmp(sample, "") != 0 && sample[i] != '*') {
             after_phone[i] = phone[i];
         } else {
             after_phone[i] = ans[j++];

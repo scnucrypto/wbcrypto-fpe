@@ -12,7 +12,7 @@ int aux_fpe_cn(WBCRYPTO_fpe_app_context *ctx, char *cn, char *sample, char *afte
     int i, tweak_len = 0;
 
     for (i = 0; i < strlen(sample); i++) {
-        if (sample[i] == 'x') {
+        if (sample[i] == '*') {
             ++tweak_len;
         }
     }
@@ -36,7 +36,7 @@ int aux_fpe_cn(WBCRYPTO_fpe_app_context *ctx, char *cn, char *sample, char *afte
         for (i = 0; i < strlen(sample); ch += 3) {
             uint32_t uc = utf8CharToUint32(ch);
             int uc_int = utf8Uint32ToInt(uc);
-            if (sample[i] == 'x') {
+            if (sample[i] == '*') {
                 utf8IntToCharDuodecimal(uc_int, input_p);
                 input_p += 4;
                 ++i;
@@ -74,7 +74,7 @@ int aux_fpe_cn(WBCRYPTO_fpe_app_context *ctx, char *cn, char *sample, char *afte
         }
     } else {
         for (i = 0; i < strlen(sample); af_p += 3, ori_add += 3) {
-            if (sample[i] == 'x') {
+            if (sample[i] == '*') {
                 int uc_int = utf8CharDuodecimalToInt(ans_p);
                 uint32_t uc = utf8IntToUint32(uc_int);
                 utf8Uint32ToChar(uc, af_p);

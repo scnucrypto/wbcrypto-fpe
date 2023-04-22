@@ -19,7 +19,7 @@ extern "C" {
 /*
  * fpe(plain, mode, sample)
  * fpe(plain, phone/idcard/address)
- * fpe(plain, phone/idcard/address, "xxxxxxxxxx")
+ * fpe(plain, phone/idcard/address, "*********")
  */
 my_bool fpe_init(UDF_INIT *initid, UDF_ARGS *args, char *message) {
     if (args->arg_count < 2 || args->arg_count > 3) {

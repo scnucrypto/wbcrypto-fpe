@@ -14,8 +14,8 @@ int main(){
     };
     // 输入手机号
     const char input[] = "13888888888";
-    // 输入手机号需要加密的格式，xxxx部分进行加密
-    const char sample[] = "138xxxxxxxx";
+    // 输入手机号需要加密的格式，****部分进行加密
+    const char sample[] = "138********";
     char cipher[20] = {0};
     char plain[20] = {0};
 
@@ -52,8 +52,8 @@ int main(){
     };
     // 输入身份证号
     const char input[] = "40000000000000000X";
-    // 输入身份证号需要加密的格式，xxxx部分进行加密
-    const char sample[] = "4412xxxxxxxxxx1234";
+    // 输入身份证号需要加密的格式，****部分进行加密
+    const char sample[] = "4412**********1234";
     char cipher[20] = {0};
     char plain[20] = {0};
 
@@ -90,8 +90,8 @@ int main(){
     };
     // 输入地址
     const char input[] = "广东省广州市天河区华南师范大学";
-    // 输入地址需要加密的格式，xxxx部分进行加密
-    const char sample[] = "xx省xx市xx区xxxxx";
+    // 输入地址需要加密的格式，****部分进行加密
+    const char sample[] = "**省**市**区*****";
     char cipher[100] = {0};
     char plain[100] = {0};
 
