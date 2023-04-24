@@ -2,19 +2,15 @@ cmake_minimum_required(VERSION 3.9.0)
 
 project(wbcrypto-fpe)
 
-# option for opening openssl 
+# option for opening openssl
+find_package(OpenSSL REQUIRED)
 option(IMPORT_OPENSSL "option for import openssl dependency" OFF)
 set(IMPORT_OPENSSL ON)
-if (IMPORT_OPENSSL)
-    message(WARNING "Note: Import_OPENSSL option is ON. Please make sure openssl is imported into the environment")
-	add_definitions(-DIMPORT_OPENSSL)
-else()
-    message("Note: Import_OPENSSL option is OFF by default")
-endif()
+message("Note: Import_OPENSSL option is ON. Please make sure openssl is imported into the environment")
+add_definitions(-DIMPORT_OPENSSL)
 
-#open test
-option(UNIT_TEST "test" ON)
-set(UNIT_TEST "test" ON)
+# open test
+ADD_SUBDIRECTORY(test)
 
 # global import header file
 set(WBCRYPTO_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
@@ -52,13 +48,6 @@ install(TARGETS wbcrypto wbcrypto-static
         LIBRARY DESTINATION lib  
         ARCHIVE DESTINATION lib  
         )
-
-# test
-IF(UNIT_TEST)
-    ADD_SUBDIRECTORY(test)
-ELSE(UNIT_TEST)
-    message(STATUS "${PROJECT_NAME} TEST OFF")
-ENDIF(UNIT_TEST)
 
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
 
