@@ -32,6 +32,7 @@ aux_source_directory(src/fpe wbcrypto_src)
 aux_source_directory(src/sm3 wbcrypto_src)
 aux_source_directory(src/sm4 wbcrypto_src)
 aux_source_directory(src/wbsm4 wbcrypto_src)
+aux_source_directory(src/se_wbsm4 wbcrypto_src)
 aux_source_directory(src/aes wbcrypto_src)
 aux_source_directory(src/fpe_app wbcrypto_src)
 

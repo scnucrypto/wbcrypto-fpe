@@ -53,7 +53,7 @@ extern "C" {
     */
     void WBCRYPTO_aes_context_free(WBCRYPTO_aes_context *ctx);
 
-    /******************************************fpe-ff1 mode*********************************************/
+    /******************************************fpe mode*********************************************/
     /**
     * Create a context instance for use with the FF1 algorithm
     * @param key the context of aes-algorithm, must be init

@@ -103,7 +103,7 @@ extern "C" {
     */
     WBCRYPTO_gcmfile_context *WBCRYPTO_sm4_gcmfile_init(WBCRYPTO_sm4_context *key);
 
-    /******************************************fpe-ff1 mode*********************************************/
+    /******************************************fpe mode*********************************************/
     /**
     * Create a context instance for use with the FF1 algorithm
     * @param key the context of sm4-algorithm, must be init
