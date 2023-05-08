@@ -28,13 +28,13 @@ aux_source_directory(WBMatrix/src wbcrypto_src)
 aux_source_directory(src/modes wbcrypto_src)
 aux_source_directory(src/utils wbcrypto_src)
 aux_source_directory(src/fpe wbcrypto_src)
+aux_source_directory(src/fpe_app wbcrypto_src)
 
+aux_source_directory(src/aes wbcrypto_src)
 aux_source_directory(src/sm3 wbcrypto_src)
 aux_source_directory(src/sm4 wbcrypto_src)
 aux_source_directory(src/wbsm4 wbcrypto_src)
 aux_source_directory(src/se_wbsm4 wbcrypto_src)
-aux_source_directory(src/aes wbcrypto_src)
-aux_source_directory(src/fpe_app wbcrypto_src)
 
 # static library
 add_library(wbcrypto-static ${wbcrypto_src})

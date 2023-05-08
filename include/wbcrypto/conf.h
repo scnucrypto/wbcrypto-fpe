@@ -30,5 +30,4 @@
 #define WBCRYPTO_TEST_ENC_KEY_FPATH "F:\\test\\enckey.whibox"
 #define WBCRYPTO_TEST_DEC_KEY_FPATH "F:\\test\\deckey.whibox"
 
-
 #endif //WBCRYPTO_CONF_H

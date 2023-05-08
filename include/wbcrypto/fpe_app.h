@@ -50,6 +50,10 @@ extern "C" {
 
     int WBCRYPTO_fpe_decrypt_cn_utf8_with_sample(WBCRYPTO_fpe_app_context *ctx, char *cn, char *after_cn, char *sample);
 
+    int WBCRYPTO_fpe_encrypt_name(WBCRYPTO_fpe_app_context *ctx, char *name, char *after_name);
+
+    int WBCRYPTO_fpe_decrypt_name(WBCRYPTO_fpe_app_context *ctx, char *name, char *after_name);
+
 #ifdef __cplusplus
 }
 #endif
