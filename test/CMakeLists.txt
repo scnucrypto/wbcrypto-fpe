@@ -1,4 +1,5 @@
 include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/WBMatrix/include)
 
 set(TEST_BUILD_NAME fpe_test)
 add_executable(${TEST_BUILD_NAME} fpe_test.c test_utils.c)
