@@ -72,6 +72,62 @@ int test_fpe_idcard() {
     printf("[FPE idcard with sample] decrypt answer: %s\n", plain);
 }
 
+int test_fpe_name() {
+    int i;
+    const uint8_t key[] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
+            0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
+    };
+    const char input[] = "谢南江";
+    char cipher[100] = {0};
+    char plain[100] = {0};
+    clock_t program_start, program_end;
+    double ts;
+
+    WBCRYPTO_fpe_app_context app_ctx;
+    WBCRYPTO_fpe_app_init(&app_ctx, key, sizeof(key), WBCYRPTO_FPE_CIPHER_SM4, WBCYRPTO_FPE_FFX_FF1);
+    program_start = clock();
+    for (i = 0; i < TESTTIME; i++) {
+        WBCRYPTO_fpe_encrypt_name(&app_ctx, input, cipher);
+    }
+    program_end = clock();
+    ts = program_end - program_start;
+    ts = ts / CLOCKS_PER_SEC;
+    printf("[FPE name] Time cost: %lf s, it means that the encryption speed is: %f 条/s\n", ts / TESTTIME,
+           1 / (ts / TESTTIME));
+    printf("[FPE name] encrypt answer: %s\n", cipher);
+    WBCRYPTO_fpe_decrypt_name(&app_ctx, cipher, plain);
+    printf("[FPE name] decrypt answer: %s\n", plain);
+}
+
+int test_fpe_address() {
+    int i;
+    const uint8_t key[] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
+            0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
+    };
+    const char input[] = "广东省广州市天河区石牌街道华南师范大学";
+    char cipher[100] = {0};
+    char plain[100] = {0};
+    clock_t program_start, program_end;
+    double ts;
+
+    WBCRYPTO_fpe_app_context app_ctx;
+    WBCRYPTO_fpe_app_init(&app_ctx, key, sizeof(key), WBCYRPTO_FPE_CIPHER_SM4, WBCYRPTO_FPE_FFX_FF1);
+    program_start = clock();
+    for (i = 0; i < TESTTIME; i++) {
+        WBCRYPTO_fpe_encrypt_address(&app_ctx, input, cipher);
+    }
+    program_end = clock();
+    ts = program_end - program_start;
+    ts = ts / CLOCKS_PER_SEC;
+    printf("[FPE address] Time cost: %lf s, it means that the encryption speed is: %f 条/s\n", ts / TESTTIME,
+           1 / (ts / TESTTIME));
+    printf("[FPE address] encrypt answer: %s\n", cipher);
+    WBCRYPTO_fpe_decrypt_address(&app_ctx, cipher, plain);
+    printf("[FPE address] decrypt answer: %s\n", plain);
+}
+
 int test_fpe_cn_utf8() {
     int i;
     const uint8_t key[] = {
@@ -94,7 +150,7 @@ int test_fpe_cn_utf8() {
     program_end = clock();
     ts = program_end - program_start;
     ts = ts / CLOCKS_PER_SEC;
-    printf("[FPE CN-UTF8] Time cost: %lf s, it means that the encryption speed is: %f MByte/s\n", ts / TESTTIME,
+    printf("[FPE CN-UTF8] Time cost: %lf s, it means that the encryption speed is: %f 条/s\n", ts / TESTTIME,
            1 / (ts / TESTTIME));
     printf("[FPE CN-UTF8] encrypt answer: %s\n", cipher);
     WBCRYPTO_fpe_decrypt_cn_utf8(&app_ctx, cipher, plain);
@@ -106,37 +162,10 @@ int test_fpe_cn_utf8() {
     printf("[FPE CN-UTF8 with sample] decrypt answer: %s\n", plain);
 }
 
-int test_fpe_name() {
-    int i;
-    const uint8_t key[] = {
-            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
-            0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
-    };
-    const char input[] = "谢南江";
-    char cipher[100] = {0};
-    char plain[100] = {0};
-    clock_t program_start, program_end;
-    double ts;
-
-    WBCRYPTO_fpe_app_context app_ctx;
-    WBCRYPTO_fpe_app_init(&app_ctx, key, sizeof(key), WBCYRPTO_FPE_CIPHER_SM4, WBCYRPTO_FPE_FFX_FF1);
-    program_start = clock();
-    for (i = 0; i < TESTTIME; i++) {
-        WBCRYPTO_fpe_encrypt_name(&app_ctx, input, cipher);
-    }
-    program_end = clock();
-    ts = program_end - program_start;
-    ts = ts / CLOCKS_PER_SEC;
-    printf("[FPE name] Time cost: %lf s, it means that the encryption speed is: %f MByte/s\n", ts / TESTTIME,
-           1 / (ts / TESTTIME));
-    printf("[FPE name] encrypt answer: %s\n", cipher);
-    WBCRYPTO_fpe_decrypt_name(&app_ctx, cipher, plain);
-    printf("[FPE name] decrypt answer: %s\n", plain);
-}
-
 int main() {
     test_fpe_phone();
     test_fpe_idcard();
     test_fpe_name();
+    test_fpe_address();
     test_fpe_cn_utf8();
 }

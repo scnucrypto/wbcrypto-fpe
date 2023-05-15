@@ -54,6 +54,10 @@ extern "C" {
 
     int WBCRYPTO_fpe_decrypt_name(WBCRYPTO_fpe_app_context *ctx, char *name, char *after_name);
 
+    int WBCRYPTO_fpe_encrypt_address(WBCRYPTO_fpe_app_context *ctx, char *address, char *after_address);
+
+    int WBCRYPTO_fpe_decrypt_address(WBCRYPTO_fpe_app_context *ctx, char *address, char *after_address);
+
 #ifdef __cplusplus
 }
 #endif
