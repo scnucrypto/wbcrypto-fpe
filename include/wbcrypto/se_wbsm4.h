@@ -59,7 +59,7 @@ extern "C" {
     * @param output plaintext
     * @return 1 if success, 0 if error
     */
-    int WBCRYPTO_se_wbsm4_decrypt(const unsigned char *input, unsigned char *output, WBCRYPTO_se_wbsm4_context *ctx);
+//    int WBCRYPTO_se_wbsm4_decrypt(const unsigned char *input, unsigned char *output, WBCRYPTO_se_wbsm4_context *ctx);
 
     /******************************************fpe mode*********************************************/
     /**

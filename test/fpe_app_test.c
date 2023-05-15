@@ -26,7 +26,7 @@ int test_fpe_phone() {
     program_end = clock();
     ts = program_end - program_start;
     ts = ts / CLOCKS_PER_SEC;
-    printf("[FPE Phone] Time cost: %lf s, it means that the encryption speed is: %f MByte/s\n", ts / TESTTIME,
+    printf("[FPE Phone] Time cost: %lf s, it means that the encryption speed is: %f 条/s\n", ts / TESTTIME,
            1 / (ts / TESTTIME));
     printf("[FPE Phone] encrypt answer: %s\n", cipher);
     WBCRYPTO_fpe_decrypt_phone(&app_ctx, cipher, plain);
@@ -60,7 +60,7 @@ int test_fpe_idcard() {
     program_end = clock();
     ts = program_end - program_start;
     ts = ts / CLOCKS_PER_SEC;
-    printf("[FPE idcard] Time cost: %lf s, it means that the encryption speed is: %f MByte/s\n", ts / TESTTIME,
+    printf("[FPE idcard] Time cost: %lf s, it means that the encryption speed is: %f 条/s\n", ts / TESTTIME,
            1 / (ts / TESTTIME));
     printf("[FPE idcard] encrypt answer: %s\n", cipher);
     WBCRYPTO_fpe_decrypt_idcard(&app_ctx, cipher, plain);
@@ -94,7 +94,7 @@ int test_fpe_address() {
     program_end = clock();
     ts = program_end - program_start;
     ts = ts / CLOCKS_PER_SEC;
-    printf("[FPE address] Time cost: %lf s, it means that the encryption speed is: %f MByte/s\n", ts / TESTTIME,
+    printf("[FPE address] Time cost: %lf s, it means that the encryption speed is: %f 条/s\n", ts / TESTTIME,
            1 / (ts / TESTTIME));
     printf("[FPE address] encrypt answer: %s\n", cipher);
     WBCRYPTO_fpe_decrypt_cn_utf8(&app_ctx, cipher, plain);
