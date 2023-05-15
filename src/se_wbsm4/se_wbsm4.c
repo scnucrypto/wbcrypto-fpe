@@ -135,6 +135,6 @@ int WBCRYPTO_se_wbsm4_encrypt(const unsigned char *input, unsigned char *output,
     return 1;
 }
 
-int WBCRYPTO_se_wbsm4_decrypt(const unsigned char *input, unsigned char *output, WBCRYPTO_se_wbsm4_context *ctx) {
-    return WBCRYPTO_se_wbsm4_encrypt(input, output, ctx);
-}
+//int WBCRYPTO_se_wbsm4_decrypt(const unsigned char *input, unsigned char *output, WBCRYPTO_se_wbsm4_context *ctx) {
+//    return WBCRYPTO_se_wbsm4_encrypt(input, output, ctx);
+//}
