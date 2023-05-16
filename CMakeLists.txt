@@ -35,6 +35,7 @@ aux_source_directory(src/sm3 wbcrypto_src)
 aux_source_directory(src/sm4 wbcrypto_src)
 aux_source_directory(src/wbsm4 wbcrypto_src)
 aux_source_directory(src/se_wbsm4 wbcrypto_src)
+aux_source_directory(src/co_wbsm4 wbcrypto_src)
 
 # static library
 add_library(wbcrypto-static ${wbcrypto_src})
