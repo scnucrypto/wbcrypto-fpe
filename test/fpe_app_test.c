@@ -3,7 +3,7 @@
 #include <wbcrypto/fpe_app.h>
 #include <time.h>
 
-#define TESTTIME 1
+#define TESTTIME 100000
 
 int test_fpe_phone() {
     int i;

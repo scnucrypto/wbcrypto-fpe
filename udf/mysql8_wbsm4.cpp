@@ -52,7 +52,8 @@ char *fpe(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length,
     memcpy(initid->ptr, plain, plain_len);
     initid->ptr[plain_len] = '\0';
 
-    WBCRYPTO_wbsm4_context *wbsm4_ctx = WBCRYPTO_wbsm4_file2key(key_filepath);
+    WBCRYPTO_wbsm4_context *wbsm4_ctx = WBCRYPTO_wbsm4_context_init(1);
+    WBCRYPTO_wbsm4_file2key(wbsm4_ctx, key_filepath);
     WBCRYPTO_fpe_app_context app_ctx;
     WBCRYPTO_fpe_app_init(&app_ctx, wbsm4_ctx, "wbsm4", "ff1");
 

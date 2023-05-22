@@ -4,7 +4,7 @@
 #include <wbcrypto/fpe_app.h>
 #include <time.h>
 
-#define TESTTIME 1
+#define TESTTIME 100000
 
 int test_fpe_phone() {
     int i;
@@ -13,7 +13,7 @@ int test_fpe_phone() {
             0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
     };
     const char input[] = "13888888888";
-    const char sample[] = "1**********";
+    const char sample[] = "138****8888";
     char cipher[20] = {0};
     char plain[20] = {0};
     clock_t program_start, program_end;

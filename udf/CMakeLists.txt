@@ -13,7 +13,7 @@ link_directories(../build/out)
 
 option(MYSQL8 "using mysql8" OFF)
 if (MYSQL8)
-    add_library(udf SHARED mysql8.cpp)
+    add_library(udf SHARED mysql8_wbsm4.cpp)
     message("Note: mysql version should be 8")
 else()
     add_library(udf SHARED mysql5.cpp)
