@@ -4,8 +4,7 @@
 #include <ctype.h>
 #include <mysql.h>
 #include <wbcrypto/fpe_app.h>
-#include <wbcrypto/aes.h>
-#include <wbcrypto/sm4.h>
+#include <wbcrypto/wbsm4.h>
 
 const uint8_t key[] = {
         0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
@@ -31,6 +30,7 @@ bool fpe_init(UDF_INIT *initid, UDF_ARGS *args, char *message) {
         strcpy(message, "could't allocate memory");
         return 1;
     }
+
     return 0;
 }
 
@@ -41,7 +41,7 @@ void fpe_deinit(UDF_INIT *initid) {
 char *fpe(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error) {
     char *plain = args->args[0];
     char *mode = args->args[1];
-    char *key = args->args[2];
+    char *key_filepath = args->args[2];
     char *sample;
     int plain_len = args->lengths[0];
 
@@ -52,16 +52,10 @@ char *fpe(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length,
     memcpy(initid->ptr, plain, plain_len);
     initid->ptr[plain_len] = '\0';
 
-    char cipher[] = "aes";
-    if(cipher == "aes"){
-        WBCRYPTO_aes_context *aes_ctx = WBCRYPTO_aes_context_init();
-        WBCRYPTO_aes_init_key(aes_ctx, key, sizeof(key));
-    }else if (cipher == "sm4"){
-        WBCRYPTO_sm4_context *sm4_ctx = WBCRYPTO_sm4_context_init();
-        WBCRYPTO_sm4_init_key(sm4_ctx, key, sizeof(key));
-    }
+    WBCRYPTO_wbsm4_context *wbsm4_ctx = WBCRYPTO_wbsm4_context_init(1);
+    WBCRYPTO_wbsm4_file2key(wbsm4_ctx, key_filepath);
     WBCRYPTO_fpe_app_context app_ctx;
-    WBCRYPTO_fpe_app_init(&app_ctx, key, sizeof(key), cipher, "ff1");
+    WBCRYPTO_fpe_app_init(&app_ctx, wbsm4_ctx, "wbsm4", "ff1");
 
     if (strcmp(mode, "phone") == 0) {
         if (plain_len != 11) {

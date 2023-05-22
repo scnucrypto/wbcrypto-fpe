@@ -24,7 +24,7 @@ extern "C" {
 
     typedef struct fpe_app_ctx WBCRYPTO_fpe_app_context;
 
-    int WBCRYPTO_fpe_app_init(WBCRYPTO_fpe_app_context *ctx, const uint8_t *key, size_t keylen, char *cipher, char *ffx);
+    int WBCRYPTO_fpe_app_init(WBCRYPTO_fpe_app_context *ctx, void *cipher_ctx, char *cipher, char *ffx);
 
     int WBCRYPTO_fpe_encrypt_phone(WBCRYPTO_fpe_app_context *ctx, char *phone, char *after_phone);
 

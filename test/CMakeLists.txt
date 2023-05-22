@@ -9,7 +9,14 @@ set(TEST_BUILD_NAME fpe_app_test)
 add_executable(${TEST_BUILD_NAME} fpe_app_test.c test_utils.c)
 TARGET_LINK_LIBRARIES(${TEST_BUILD_NAME} wbcrypto -lssl -lcrypto -lm)
 
+set(TEST_BUILD_NAME wbsm4_fpe_app_test)
+add_executable(${TEST_BUILD_NAME} wbsm4_fpe_app_test.c test_utils.c)
+TARGET_LINK_LIBRARIES(${TEST_BUILD_NAME} wbcrypto -lssl -lcrypto -lm)
+
+set(TEST_BUILD_NAME key2file)
+add_executable(${TEST_BUILD_NAME} key2file.c test_utils.c)
+TARGET_LINK_LIBRARIES(${TEST_BUILD_NAME} wbcrypto -lssl -lcrypto -lm)
+
 set(TEST_BUILD_NAME co_wbsm4)
 add_executable(${TEST_BUILD_NAME} co_wbsm4.c test_utils.c)
 TARGET_LINK_LIBRARIES(${TEST_BUILD_NAME} wbcrypto -lssl -lcrypto -lm)
-
