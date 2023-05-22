@@ -99,32 +99,4 @@ cleanup:
     return ret;
 }
 
-int WBCRYPTO_wbsm4_key2bytes(const WBCRYPTO_wbsm4_context *ctx, char **kstream){
-    int ret=0;
-    int ks_len = 0;
-
-    ks_len = sizeof(struct wbsm4_context);
-    ks_len += sizeof(uint32_t);
-    *kstream = malloc(ks_len);
-    *((uint32_t *)*kstream) = ks_len;
-    uint8_t* ds  = *kstream + sizeof(uint32_t);
-    memcpy(ds, ctx, sizeof(struct wbsm4_context));
-
-    ret=1;
-cleanup:
-    return ret;
-}
-
-int WBCRYPTO_wbsm4_bytes2key(WBCRYPTO_wbsm4_context *ctx, const char *kstream){
-    int ret=0;
-
-    const uint8_t  *ptr = kstream;
-    ptr += sizeof(uint32_t);
-    memcpy(ctx, ptr, sizeof(struct wbsm4_context));
-
-    ret=1;
-cleanup:
-    return ret;
-}
-
 

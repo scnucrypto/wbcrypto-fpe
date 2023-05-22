@@ -1,5 +1,6 @@
 #include "test_local.h"
 #include <wbcrypto/aes.h>
+#include <wbcrypto/wbsm4.h>
 #include <wbcrypto/fpe_app.h>
 #include <time.h>
 
@@ -12,16 +13,16 @@ int test_fpe_phone() {
             0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
     };
     const char input[] = "13888888888";
-    const char sample[] = "138********";
+    const char sample[] = "1**********";
     char cipher[20] = {0};
     char plain[20] = {0};
     clock_t program_start, program_end;
     double ts;
 
-    WBCRYPTO_aes_context *aes_ctx = WBCRYPTO_aes_context_init();
-    WBCRYPTO_aes_init_key(aes_ctx, key, sizeof(key));
+    WBCRYPTO_wbsm4_context *wbsm4_ctx = WBCRYPTO_wbsm4_context_init(1, 1);
+    WBCRYPTO_wbsm4_gen_table(wbsm4_ctx, key, sizeof(key));
     WBCRYPTO_fpe_app_context app_ctx;
-    WBCRYPTO_fpe_app_init(&app_ctx, aes_ctx, WBCYRPTO_FPE_CIPHER_AES, WBCYRPTO_FPE_FFX_FF1);
+    WBCRYPTO_fpe_app_init(&app_ctx, wbsm4_ctx, WBCYRPTO_FPE_CIPHER_WBSM4, WBCYRPTO_FPE_FFX_FF1);
     program_start = clock();
     for (i = 0; i < TESTTIME; i++) {
         WBCRYPTO_fpe_encrypt_phone(&app_ctx, input, cipher);
@@ -54,10 +55,10 @@ int test_fpe_idcard() {
     clock_t program_start, program_end;
     double ts;
 
-    WBCRYPTO_aes_context *aes_ctx = WBCRYPTO_aes_context_init();
-    WBCRYPTO_aes_init_key(aes_ctx, key, sizeof(key));
+    WBCRYPTO_wbsm4_context *wbsm4_ctx = WBCRYPTO_wbsm4_context_init(1, 1);
+    WBCRYPTO_wbsm4_gen_table(wbsm4_ctx, key, sizeof(key));
     WBCRYPTO_fpe_app_context app_ctx;
-    WBCRYPTO_fpe_app_init(&app_ctx, aes_ctx, WBCYRPTO_FPE_CIPHER_AES, WBCYRPTO_FPE_FFX_FF1);
+    WBCRYPTO_fpe_app_init(&app_ctx, wbsm4_ctx, WBCYRPTO_FPE_CIPHER_WBSM4, WBCYRPTO_FPE_FFX_FF1);
     program_start = clock();
     for (i = 0; i < TESTTIME; i++) {
         WBCRYPTO_fpe_encrypt_idcard(&app_ctx, input, cipher);
@@ -90,10 +91,10 @@ int test_fpe_address() {
     clock_t program_start, program_end;
     double ts;
 
-    WBCRYPTO_aes_context *aes_ctx = WBCRYPTO_aes_context_init();
-    WBCRYPTO_aes_init_key(aes_ctx, key, sizeof(key));
+    WBCRYPTO_wbsm4_context *wbsm4_ctx = WBCRYPTO_wbsm4_context_init(1, 1);
+    WBCRYPTO_wbsm4_gen_table(wbsm4_ctx, key, sizeof(key));
     WBCRYPTO_fpe_app_context app_ctx;
-    WBCRYPTO_fpe_app_init(&app_ctx, aes_ctx, WBCYRPTO_FPE_CIPHER_AES, WBCYRPTO_FPE_FFX_FF1);
+    WBCRYPTO_fpe_app_init(&app_ctx, wbsm4_ctx, WBCYRPTO_FPE_CIPHER_WBSM4, WBCYRPTO_FPE_FFX_FF1);
     program_start = clock();
     for (i = 0; i < TESTTIME; i++) {
         WBCRYPTO_fpe_encrypt_cn_utf8(&app_ctx, input, cipher);

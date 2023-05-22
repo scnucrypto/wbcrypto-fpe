@@ -40,7 +40,6 @@ extern "C" {
     */
     void WBCRYPTO_wbsm4_context_free(WBCRYPTO_wbsm4_context *ctx);
 
-
     /**
     * the function generate key-tables by the key in the context(the default dummyaround param is 1)
     * @param key key used to generate the key-tables, which need to hide
@@ -83,23 +82,6 @@ extern "C" {
     * @return 1 if success, 0 if error
     */
     int WBCRYPTO_wbsm4_file2key(WBCRYPTO_wbsm4_context *ctx, char *fpath);
-
-    /**
-    * convert T-box to string for exchanging
-    * @param ctx the context with t-box which will convert
-    * @param kstream key stream
-    * @param ks_len key stream length
-    * @return 1 if success, 0 if error
-    */
-    int WBCRYPTO_wbsm4_key2bytes(const WBCRYPTO_wbsm4_context *ctx, char **kstream);
-    /**
-    * convert string to T-box
-    * @param ctx the context which is gen t-box by string, must bu NULL
-    * @param kstream key stream
-    * @param ks_len key stream length
-    * @return 1 if success, 0 if error
-    */
-    int WBCRYPTO_wbsm4_bytes2key(WBCRYPTO_wbsm4_context *ctx, const char *kstream);
 
     /********************************************CBC mode************************************************/
     /**
