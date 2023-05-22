@@ -114,7 +114,7 @@ int test_wbsm4_fpe() {
     clock_t program_start, program_end;
     double ts;
 
-    WBCRYPTO_wbsm4_context *wbsm4_ctx = WBCRYPTO_wbsm4_context_init(1, 1);
+    WBCRYPTO_wbsm4_context *wbsm4_ctx = WBCRYPTO_wbsm4_context_init(1);
     WBCRYPTO_wbsm4_gen_table(wbsm4_ctx, key, sizeof(key));
     WBCRYPTO_fpe_context *fpe_ctx = WBCRYPTO_wbsm4_fpe_init(wbsm4_ctx, tweak, sizeof(tweak), 10);
     WBCRYPTO_ff1_encrypt(fpe_ctx, input, cipher);

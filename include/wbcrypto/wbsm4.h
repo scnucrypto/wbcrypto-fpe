@@ -10,17 +10,16 @@ extern "C" {
 #endif
 
     struct wbsm4_context {
-        int rounds;
         int encmode;
 
-        uint32_t ****MM;        //MM[32]][3][4][256]
-        uint32_t ***CC;         //CC[32][4][256]
-        uint32_t ***DD;         //DD[32][4][256]
+        uint32_t MM[32][3][4][256];
+        uint32_t CC[32][4][256];
+        uint32_t DD[32][4][256];
 
         uint32_t SE[4][4][256];
         uint32_t FE[4][4][256];
 
-        uint32_t ***Table;      //Table[32][4][256]
+        uint32_t Table[32][4][256];
     };
 
     typedef struct wbsm4_context WBCRYPTO_wbsm4_context;
@@ -32,14 +31,13 @@ extern "C" {
     * @param dummyrounds add extra dummyrounds, 1 dummyround will be expanded to 4 rounds in the runtime
     * @return ctx Context to initialize, NULL is fault, otherwise successful
     */
-    WBCRYPTO_wbsm4_context *WBCRYPTO_wbsm4_context_init(int encmode, int dummyrounds);
+    WBCRYPTO_wbsm4_context *WBCRYPTO_wbsm4_context_init(int encmode);
 
     /**
     * free context
     * @param ctx
     */
     void WBCRYPTO_wbsm4_context_free(WBCRYPTO_wbsm4_context *ctx);
-
 
     /**
     * the function generate key-tables by the key in the context(the default dummyaround param is 1)
@@ -83,23 +81,6 @@ extern "C" {
     * @return 1 if success, 0 if error
     */
     int WBCRYPTO_wbsm4_file2key(WBCRYPTO_wbsm4_context *ctx, char *fpath);
-
-    /**
-    * convert T-box to string for exchanging
-    * @param ctx the context with t-box which will convert
-    * @param kstream key stream
-    * @param ks_len key stream length
-    * @return 1 if success, 0 if error
-    */
-    int WBCRYPTO_wbsm4_key2bytes(const WBCRYPTO_wbsm4_context *ctx, char **kstream);
-    /**
-    * convert string to T-box
-    * @param ctx the context which is gen t-box by string, must bu NULL
-    * @param kstream key stream
-    * @param ks_len key stream length
-    * @return 1 if success, 0 if error
-    */
-    int WBCRYPTO_wbsm4_bytes2key(WBCRYPTO_wbsm4_context *ctx, const char *kstream);
 
     /********************************************CBC mode************************************************/
     /**
