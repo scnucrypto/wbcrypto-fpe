@@ -1,30 +1,29 @@
 #include "wbsm4_local.h"
 
-WBCRYPTO_wbsm4_context *WBCRYPTO_wbsm4_context_init(int encmode, int dummyrounds){
+WBCRYPTO_wbsm4_context *WBCRYPTO_wbsm4_context_init(int encmode){
     int i,j,k;
     struct wbsm4_context *ctx=malloc(sizeof(struct wbsm4_context));
     if(ctx==NULL){
         return NULL;
     }
-    int rounds = 32 + 4*dummyrounds;
-    ctx->MM = (uint32_t ****)malloc(rounds*sizeof(uint32_t***));
-    ctx->CC = (uint32_t ***)malloc(rounds*sizeof(uint32_t**));
-    ctx->DD = (uint32_t ***)malloc(rounds*sizeof(uint32_t**));
-    ctx->Table = (uint32_t ***)malloc(rounds*sizeof(uint32_t**));
+    ctx->MM = (uint32_t ****)malloc(32*sizeof(uint32_t***));
+    ctx->CC = (uint32_t ***)malloc(32*sizeof(uint32_t**));
+    ctx->DD = (uint32_t ***)malloc(32*sizeof(uint32_t**));
+    ctx->Table = (uint32_t ***)malloc(32*sizeof(uint32_t**));
 
-    for(i=0;i<rounds;i++){
+    for(i=0;i<32;i++){
         ctx->MM[i]=(uint32_t ***)malloc((3)*sizeof(uint32_t**));
         ctx->CC[i]=(uint32_t **)malloc((4)*sizeof(uint32_t*));
         ctx->DD[i]=(uint32_t **)malloc((4)*sizeof(uint32_t*));
         ctx->Table[i]=(uint32_t **)malloc((4)*sizeof(uint32_t*));
     }
 
-    for(i=0; i< rounds; i++) {
+    for(i=0; i< 32; i++) {
         for (j = 0; j < 3; j++) {
             ctx->MM[i][j]=(uint32_t **)malloc((4)*sizeof(uint32_t*));
         }
     }
-    for(i=0; i< rounds; i++) {
+    for(i=0; i< 32; i++) {
         for (j = 0; j < 3; j++) {
             for (k = 0; k < 4; k++) {
                 ctx->MM[i][j][k] = (uint32_t *) malloc((256) * sizeof(uint32_t));
@@ -32,14 +31,13 @@ WBCRYPTO_wbsm4_context *WBCRYPTO_wbsm4_context_init(int encmode, int dummyrounds
         }
     }
 
-    for(i=0; i< rounds; i++) {
+    for(i=0; i< 32; i++) {
         for (j = 0; j < 4; j++) {
             ctx->CC[i][j]=(uint32_t *)malloc((256)*sizeof(uint32_t));
             ctx->DD[i][j]=(uint32_t *)malloc((256)*sizeof(uint32_t));
             ctx->Table[i][j]=(uint32_t *)malloc((256)*sizeof(uint32_t));
         }
     }
-    ctx->rounds=rounds;
     ctx->encmode=encmode;
     return ctx;
 }
@@ -64,7 +62,7 @@ int WBCRYPTO_wbsm4_encrypt(const unsigned char *in, unsigned char *out, WBCRYPTO
     x2 = ctx->SE[2][0][(x2 >> 24) & 0xff] ^ ctx->SE[2][1][(x2 >> 16) & 0xff] ^ ctx->SE[2][2][(x2 >> 8) & 0xff] ^ ctx->SE[2][3][x2 & 0xff];
     x3 = ctx->SE[3][0][(x3 >> 24) & 0xff] ^ ctx->SE[3][1][(x3 >> 16) & 0xff] ^ ctx->SE[3][2][(x3 >> 8) & 0xff] ^ ctx->SE[3][3][x3 & 0xff];
 
-    for(i = 0; i < ctx->rounds; i++)
+    for(i = 0; i < 32; i++)
     {
         xt1 = ctx->MM[i][0][0][(x1 >> 24) & 0xff] ^ ctx->MM[i][0][1][(x1 >> 16) & 0xff] ^ ctx->MM[i][0][2][(x1 >> 8) & 0xff] ^ ctx->MM[i][0][3][x1 & 0xff];
         xt2 = ctx->MM[i][1][0][(x2 >> 24) & 0xff] ^ ctx->MM[i][1][1][(x2 >> 16) & 0xff] ^ ctx->MM[i][1][2][(x2 >> 8) & 0xff] ^ ctx->MM[i][1][3][x2 & 0xff];

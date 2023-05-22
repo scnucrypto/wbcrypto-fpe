@@ -10,7 +10,6 @@ extern "C" {
 #endif
 
     struct wbsm4_context {
-        int rounds;
         int encmode;
 
         uint32_t ****MM;        //MM[32]][3][4][256]
@@ -32,7 +31,7 @@ extern "C" {
     * @param dummyrounds add extra dummyrounds, 1 dummyround will be expanded to 4 rounds in the runtime
     * @return ctx Context to initialize, NULL is fault, otherwise successful
     */
-    WBCRYPTO_wbsm4_context *WBCRYPTO_wbsm4_context_init(int encmode, int dummyrounds);
+    WBCRYPTO_wbsm4_context *WBCRYPTO_wbsm4_context_init(int encmode);
 
     /**
     * free context

@@ -70,38 +70,6 @@ M32 L_matrix = {
         .M[31] = 0x40404101
 };
 
-void identityAff32(Aff32 *aff){
-    int i;
-    for(i = 0; i < 32; i++)
-    {
-        identityM32(&aff->Mat);
-    }
-    aff->Vec.V = 0;
-}
-
-uint8_t *wbsm4_gen_dummyround_array(int rounds, int dummyrounds) {
-    int len_origin = rounds + dummyrounds;
-    uint8_t *da = (uint8_t*) malloc(sizeof(uint8_t)*(len_origin));
-    memset(da, 0, rounds);
-    memset(da+rounds, 1, dummyrounds);
-    wRandomShuffleU8(da, len_origin);
-    int len_result = rounds + 4*dummyrounds;
-    uint8_t *result = (uint8_t*) malloc(sizeof(uint8_t)*(len_result));
-    uint8_t *iter = result;
-    int i;
-    for (i=0; i<len_origin; i++) {
-        *iter = *(da+i);
-        if (*iter) {
-            memset(iter, 1, 4*sizeof(uint8_t));
-            iter += 4;
-        } else {
-            iter ++;
-        }
-    }
-    free(da);
-    return result;
-}
-
 int WBCRYPTO_wbsm4_gen_table(WBCRYPTO_wbsm4_context *wbsm4_ctx,
                              const uint8_t *key, size_t keylen){
     int ret = 0;
@@ -128,8 +96,6 @@ int WBCRYPTO_wbsm4_gen_table(WBCRYPTO_wbsm4_context *wbsm4_ctx,
         aux_sm4_init_key(sm4_key, key, keylen, WBCRYPTO_DECRYPT_MODE);
     }
     InitRandom(((unsigned int)time(NULL)));
-
-    uint8_t *dummy_array = wbsm4_gen_dummyround_array(32, (wbsm4_ctx->rounds-32)/4);
 
     for (i = 0; i < 36; i++)
     {
@@ -164,86 +130,65 @@ int WBCRYPTO_wbsm4_gen_table(WBCRYPTO_wbsm4_context *wbsm4_ctx,
         D[i].Vec.V ^= P[i + 4].Vec.V ^ temp_u32;
     }
 
-    int flag = 0;
-    int point;
-    for (i = 0, point=0; i < wbsm4_ctx->rounds; i++, point++)
+    for (i = 0; i < 32; i++)
     {
-        if(dummy_array[i]==0) {
-            point = flag ? point - 4 : point;
-            flag = 0;
-
-            //1
+        //1
+        for (j = 0; j < 3; j++) {
+            Q_constant[j] = cus_random();
+        }
+        for (x = 0; x < 256; x++) {
+            for (j = 0; j < 4; j++) {
+                temp_u32 = x << (24 - j * 8);
+                wbsm4_ctx->MM[i][0][j][x] = affineU32(M[i][0], temp_u32);
+                wbsm4_ctx->MM[i][1][j][x] = affineU32(M[i][1], temp_u32);
+                wbsm4_ctx->MM[i][2][j][x] = affineU32(M[i][2], temp_u32);
+            }
             for (j = 0; j < 3; j++) {
-                Q_constant[j] = cus_random();
+                wbsm4_ctx->MM[i][0][j][x] ^= Q_constant[j];
+                wbsm4_ctx->MM[i][1][j][x] ^= Q_constant[j];
+                wbsm4_ctx->MM[i][2][j][x] ^= Q_constant[j];
             }
-            for (x = 0; x < 256; x++) {
-                for (j = 0; j < 4; j++) {
-                    temp_u32 = x << (24 - j * 8);
-                    wbsm4_ctx->MM[i][0][j][x] = affineU32(M[point][0], temp_u32);
-                    wbsm4_ctx->MM[i][1][j][x] = affineU32(M[point][1], temp_u32);
-                    wbsm4_ctx->MM[i][2][j][x] = affineU32(M[point][2], temp_u32);
-                }
-                for (j = 0; j < 3; j++) {
-                    wbsm4_ctx->MM[i][0][j][x] ^= Q_constant[j];
-                    wbsm4_ctx->MM[i][1][j][x] ^= Q_constant[j];
-                    wbsm4_ctx->MM[i][2][j][x] ^= Q_constant[j];
-                }
-                wbsm4_ctx->MM[i][0][3][x] ^= M[point][0].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
-                wbsm4_ctx->MM[i][1][3][x] ^= M[point][1].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
-                wbsm4_ctx->MM[i][2][3][x] ^= M[point][2].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
+            wbsm4_ctx->MM[i][0][3][x] ^= M[i][0].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
+            wbsm4_ctx->MM[i][1][3][x] ^= M[i][1].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
+            wbsm4_ctx->MM[i][2][3][x] ^= M[i][2].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
+        }
+        //2
+        for (j = 0; j < 3; j++) {
+            Q_constant[j] = cus_random();
+        }
+        for (x = 0; x < 256; x++) {
+            for (j = 0; j < 4; j++) {
+                temp_u32 = x << (24 - j * 8);
+                wbsm4_ctx->CC[i][j][x] = affineU32(C[i], temp_u32);
+                wbsm4_ctx->DD[i][j][x] = affineU32(D[i], temp_u32);
             }
-            //2
             for (j = 0; j < 3; j++) {
-                Q_constant[j] = cus_random();
+                wbsm4_ctx->CC[i][j][x] ^= Q_constant[j];
+                wbsm4_ctx->DD[i][j][x] ^= Q_constant[j];
             }
-            for (x = 0; x < 256; x++) {
-                for (j = 0; j < 4; j++) {
-                    temp_u32 = x << (24 - j * 8);
-                    wbsm4_ctx->CC[i][j][x] = affineU32(C[point], temp_u32);
-                    wbsm4_ctx->DD[i][j][x] = affineU32(D[point], temp_u32);
-                }
-                for (j = 0; j < 3; j++) {
-                    wbsm4_ctx->CC[i][j][x] ^= Q_constant[j];
-                    wbsm4_ctx->DD[i][j][x] ^= Q_constant[j];
-                }
-                wbsm4_ctx->CC[i][3][x] ^= C[point].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
-                wbsm4_ctx->DD[i][3][x] ^= D[point].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
-            }
-            //3
-            //combine QL
-            M32 QL;
-            MatMulMatM32(Q[point].Mat, L_matrix, &QL);
+            wbsm4_ctx->CC[i][3][x] ^= C[i].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
+            wbsm4_ctx->DD[i][3][x] ^= D[i].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
+        }
+        //3
+        //combine QL
+        M32 QL;
+        MatMulMatM32(Q[i].Mat, L_matrix, &QL);
 
+        for (j = 0; j < 3; j++) {
+            Q_constant[j] = cus_random();
+        }
+
+        for (x = 0; x < 256; x++) {
+            for (j = 0; j < 4; j++) {
+                temp_u8 = affineU8(Eij[i][j], x);
+                temp_u8 = SBOX[temp_u8 ^ ((sm4_key->rk[i] >> (24 - j * 8)) & 0xff)];
+                temp_u32 = temp_u8 << (24 - j * 8);
+                wbsm4_ctx->Table[i][j][x] = MatMulNumM32(QL, temp_u32);
+            }
             for (j = 0; j < 3; j++) {
-                Q_constant[j] = cus_random();
+                wbsm4_ctx->Table[i][j][x] ^= Q_constant[j];
             }
-
-            for (x = 0; x < 256; x++) {
-                for (j = 0; j < 4; j++) {
-                    temp_u8 = affineU8(Eij[point][j], x);
-                    temp_u8 = SBOX[temp_u8 ^ ((sm4_key->rk[point] >> (24 - j * 8)) & 0xff)];
-                    temp_u32 = temp_u8 << (24 - j * 8);
-                    wbsm4_ctx->Table[i][j][x] = MatMulNumM32(QL, temp_u32);
-                }
-                for (j = 0; j < 3; j++) {
-                    wbsm4_ctx->Table[i][j][x] ^= Q_constant[j];
-                }
-                wbsm4_ctx->Table[i][3][x] ^= Q[point].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
-            }
-        }else{
-            flag=1;
-            for(j=0;j<4;j++){
-                for(x=0;x<256;x++){
-                    wbsm4_ctx->Table[i][j][x]=0;
-//                    wbsm4_ctx->DD[i][j][x]=0;
-                }
-            }
-//            identityAff32(&wbsm4_ctx->CC[i]);
-            for(j=0;j<4;j++){
-                for(x=0;x<256;x++){
-                    wbsm4_ctx->CC[i][j][x] = x << (24 - j * 8);
-                }
-            }
+            wbsm4_ctx->Table[i][3][x] ^= Q[i].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
         }
     }
 
@@ -274,7 +219,6 @@ int WBCRYPTO_wbsm4_gen_table(WBCRYPTO_wbsm4_context *wbsm4_ctx,
 
     ret=1;
 cleanup:
-    free(dummy_array);
     return ret;
 }
 
