@@ -3,7 +3,7 @@
 #include <wbcrypto/fpe_app.h>
 #include <time.h>
 
-#define TESTTIME 1000
+#define TESTTIME 10000
 
 int test_key_to_file() {
     int i;

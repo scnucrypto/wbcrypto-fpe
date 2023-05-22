@@ -1,42 +1,9 @@
 #include "wbsm4_local.h"
 
 WBCRYPTO_wbsm4_context *WBCRYPTO_wbsm4_context_init(int encmode){
-    int i,j,k;
     struct wbsm4_context *ctx=malloc(sizeof(struct wbsm4_context));
     if(ctx==NULL){
         return NULL;
-    }
-    ctx->MM = (uint32_t ****)malloc(32*sizeof(uint32_t***));
-    ctx->CC = (uint32_t ***)malloc(32*sizeof(uint32_t**));
-    ctx->DD = (uint32_t ***)malloc(32*sizeof(uint32_t**));
-    ctx->Table = (uint32_t ***)malloc(32*sizeof(uint32_t**));
-
-    for(i=0;i<32;i++){
-        ctx->MM[i]=(uint32_t ***)malloc((3)*sizeof(uint32_t**));
-        ctx->CC[i]=(uint32_t **)malloc((4)*sizeof(uint32_t*));
-        ctx->DD[i]=(uint32_t **)malloc((4)*sizeof(uint32_t*));
-        ctx->Table[i]=(uint32_t **)malloc((4)*sizeof(uint32_t*));
-    }
-
-    for(i=0; i< 32; i++) {
-        for (j = 0; j < 3; j++) {
-            ctx->MM[i][j]=(uint32_t **)malloc((4)*sizeof(uint32_t*));
-        }
-    }
-    for(i=0; i< 32; i++) {
-        for (j = 0; j < 3; j++) {
-            for (k = 0; k < 4; k++) {
-                ctx->MM[i][j][k] = (uint32_t *) malloc((256) * sizeof(uint32_t));
-            }
-        }
-    }
-
-    for(i=0; i< 32; i++) {
-        for (j = 0; j < 4; j++) {
-            ctx->CC[i][j]=(uint32_t *)malloc((256)*sizeof(uint32_t));
-            ctx->DD[i][j]=(uint32_t *)malloc((256)*sizeof(uint32_t));
-            ctx->Table[i][j]=(uint32_t *)malloc((256)*sizeof(uint32_t));
-        }
     }
     ctx->encmode=encmode;
     return ctx;

@@ -12,14 +12,14 @@ extern "C" {
     struct wbsm4_context {
         int encmode;
 
-        uint32_t ****MM;        //MM[32]][3][4][256]
-        uint32_t ***CC;         //CC[32][4][256]
-        uint32_t ***DD;         //DD[32][4][256]
+        uint32_t MM[32][3][4][256];
+        uint32_t CC[32][4][256];
+        uint32_t DD[32][4][256];
 
         uint32_t SE[4][4][256];
         uint32_t FE[4][4][256];
 
-        uint32_t ***Table;      //Table[32][4][256]
+        uint32_t Table[32][4][256];
     };
 
     typedef struct wbsm4_context WBCRYPTO_wbsm4_context;
