@@ -89,8 +89,10 @@ int test_fpe_name() {
     clock_t program_start, program_end;
     double ts;
 
+    WBCRYPTO_aes_context *aes_ctx = WBCRYPTO_aes_context_init();
+    WBCRYPTO_aes_init_key(aes_ctx, key, sizeof(key));
     WBCRYPTO_fpe_app_context app_ctx;
-    WBCRYPTO_fpe_app_init(&app_ctx, key, sizeof(key), WBCYRPTO_FPE_CIPHER_SM4, WBCYRPTO_FPE_FFX_FF1);
+    WBCRYPTO_fpe_app_init(&app_ctx, aes_ctx, WBCYRPTO_FPE_CIPHER_AES, WBCYRPTO_FPE_FFX_FF1);
     program_start = clock();
     for (i = 0; i < TESTTIME; i++) {
         WBCRYPTO_fpe_encrypt_name(&app_ctx, input, cipher);
@@ -148,8 +150,10 @@ int test_fpe_cn_utf8() {
     clock_t program_start, program_end;
     double ts;
 
+    WBCRYPTO_aes_context *aes_ctx = WBCRYPTO_aes_context_init();
+    WBCRYPTO_aes_init_key(aes_ctx, key, sizeof(key));
     WBCRYPTO_fpe_app_context app_ctx;
-    WBCRYPTO_fpe_app_init(&app_ctx, key, sizeof(key), WBCYRPTO_FPE_CIPHER_SM4, WBCYRPTO_FPE_FFX_FF1);
+    WBCRYPTO_fpe_app_init(&app_ctx, aes_ctx, WBCYRPTO_FPE_CIPHER_AES, WBCYRPTO_FPE_FFX_FF1);
     program_start = clock();
     for (i = 0; i < TESTTIME; i++) {
         WBCRYPTO_fpe_encrypt_cn_utf8(&app_ctx, input, cipher);
