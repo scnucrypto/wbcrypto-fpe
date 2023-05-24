@@ -70,8 +70,8 @@ M32 L_Matrix = {
         .M[31] = 0x40404101
 };
 
-int WBCRYPTO_co_wbsm4_gen_table(WBCRYPTO_co_wbsm4_enc_context *enc_ctx, WBCRYPTO_co_wbsm4_dec_context *dec_ctx,
-                                WBCRYPTO_co_wbsm4_dec_ee_context *ee_ctx, const uint8_t *key, size_t keylen) {
+int WBCRYPTO_co_wbsm4_gen_table1(WBCRYPTO_co_wbsm4_enc_context *enc_ctx, WBCRYPTO_co_wbsm4_dec_context *dec_ctx,
+                                 const uint8_t *key, size_t keylen) {
     int i, j, x;
     uint8_t temp_u8;
     uint32_t temp_u32;
@@ -200,16 +200,16 @@ int WBCRYPTO_co_wbsm4_gen_table(WBCRYPTO_co_wbsm4_enc_context *enc_ctx, WBCRYPTO
     for (i = 0; i < 4; i++) {
         P_inv[i] = PP[i];
     }
-    for (i = 4; i < 36; i++) {
+    for (i = 4; i < 32; i++) {
         //affine P
         genaffinepairM32(&P[i], &P_inv[i]);
     }
-//    for (i = 32; i < 36; i++) {
-//        identityM32(&P[i].Mat);
-//        initV32(&P[i].Vec);
-//        identityM32(&P_inv[i].Mat);
-//        initV32(&P_inv[i].Vec);
-//    }
+    for (i = 32; i < 36; i++) {
+        identityM32(&P[i].Mat);
+        initV32(&P[i].Vec);
+        identityM32(&P_inv[i].Mat);
+        initV32(&P_inv[i].Vec);
+    }
     for (i = 0; i < 32; i++) {
         //affine E
         for (j = 0; j < 4; j++) {
@@ -285,20 +285,43 @@ int WBCRYPTO_co_wbsm4_gen_table(WBCRYPTO_co_wbsm4_enc_context *enc_ctx, WBCRYPTO
             dec_ctx->Table[i][3][x] ^= Q[i].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
         }
     }
-    //external encoding
+    return 1;
+}
+
+int WBCRYPTO_co_wbsm4_gen_table2(WBCRYPTO_co_wbsm4_dec_context *dec_ctx, WBCRYPTO_co_wbsm4_dec_ee_context *ee_ctx) {
+    int i, j, x;
+    uint32_t Q_constant[3] = {0};
+    uint32_t temp_u32, temp_u32_cc, temp_u32_dd;
+    Aff32 P[4], P_inv[4], C[4], D[4];
+
+    for (i = 0; i < 4; i++) {
+//        genaffinepairM32(&P[i], &P_inv[i]);
+        identityM32(&P[i].Mat);
+        initV32(&P[i].Vec);
+        identityM32(&P_inv[i].Mat);
+        initV32(&P_inv[i].Vec);
+    }
     for (j = 0; j < 3; j++) {
         Q_constant[j] = cus_random();
     }
     for (i = 0; i < 4; i++) {
         for (x = 0; x < 256; x++) {
             for (j = 0; j < 4; j++) {
+                dec_ctx->CC[28 + i][j][x] = affineU32(P[i], dec_ctx->CC[28 + i][j][x]);
+                dec_ctx->DD[28 + i][j][x] = affineU32(P[i], dec_ctx->DD[28 + i][j][x]) ;
+            }
+            for (j = 0; j < 4; j++) {
                 temp_u32 = x << (24 - j * 8);
-                ee_ctx->FE[i][j][x] = affineU32(P_inv[35 - i], temp_u32);
+                ee_ctx->FE[i][j][x] = affineU32(P_inv[3 - i], temp_u32);
             }
             for (j = 0; j < 3; j++) {
+                dec_ctx->CC[28 + i][j][x] ^= Q_constant[j];
+                dec_ctx->DD[28 + i][j][x] ^= Q_constant[j];
                 ee_ctx->FE[i][j][x] ^= Q_constant[j];
             }
-            ee_ctx->FE[i][3][x] ^= P_inv[35 - i].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
+            dec_ctx->CC[28 + i][3][x] ^= P[i].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
+            dec_ctx->DD[28 + i][3][x] ^= P[i].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
+            ee_ctx->FE[i][3][x] ^= P_inv[3 - i].Vec.V ^ Q_constant[0] ^ Q_constant[1] ^ Q_constant[2];
         }
     }
     return 1;
@@ -394,15 +417,23 @@ int WBCRYPTO_co_wbsm4_decrypt(const unsigned char *in, unsigned char *out, WBCRY
 int WBCRYPTO_co_wbsm4_ee_decrypt(const unsigned char *in, unsigned char *out, WBCRYPTO_co_wbsm4_dec_ee_context *ctx) {
     uint32_t x0, x1, x2, x3;
 
+//    x0 = GET32(in);
+//    x1 = GET32(in + 4);
+//    x2 = GET32(in + 8);
+//    x3 = GET32(in + 12);
     x3 = GET32(in);
     x2 = GET32(in + 4);
     x1 = GET32(in + 8);
     x0 = GET32(in + 12);
 
-    x3 = ctx->FE[0][0][(x3 >> 24) & 0xff] ^ ctx->FE[0][1][(x3 >> 16) & 0xff] ^ ctx->FE[0][2][(x3 >> 8) & 0xff] ^ ctx->FE[0][3][x3 & 0xff];
-    x2 = ctx->FE[1][0][(x2 >> 24) & 0xff] ^ ctx->FE[1][1][(x2 >> 16) & 0xff] ^ ctx->FE[1][2][(x2 >> 8) & 0xff] ^ ctx->FE[1][3][x2 & 0xff];
-    x1 = ctx->FE[2][0][(x1 >> 24) & 0xff] ^ ctx->FE[2][1][(x1 >> 16) & 0xff] ^ ctx->FE[2][2][(x1 >> 8) & 0xff] ^ ctx->FE[2][3][x1 & 0xff];
-    x0 = ctx->FE[3][0][(x0 >> 24) & 0xff] ^ ctx->FE[3][1][(x0 >> 16) & 0xff] ^ ctx->FE[3][2][(x0 >> 8) & 0xff] ^ ctx->FE[3][3][x0 & 0xff];
+    x3 = ctx->FE[0][0][(x3 >> 24) & 0xff] ^ ctx->FE[0][1][(x3 >> 16) & 0xff] ^ ctx->FE[0][2][(x3 >> 8) & 0xff] ^
+         ctx->FE[0][3][x3 & 0xff];
+    x2 = ctx->FE[1][0][(x2 >> 24) & 0xff] ^ ctx->FE[1][1][(x2 >> 16) & 0xff] ^ ctx->FE[1][2][(x2 >> 8) & 0xff] ^
+         ctx->FE[1][3][x2 & 0xff];
+    x1 = ctx->FE[2][0][(x1 >> 24) & 0xff] ^ ctx->FE[2][1][(x1 >> 16) & 0xff] ^ ctx->FE[2][2][(x1 >> 8) & 0xff] ^
+         ctx->FE[2][3][x1 & 0xff];
+    x0 = ctx->FE[3][0][(x0 >> 24) & 0xff] ^ ctx->FE[3][1][(x0 >> 16) & 0xff] ^ ctx->FE[3][2][(x0 >> 8) & 0xff] ^
+         ctx->FE[3][3][x0 & 0xff];
 
     PUT32(x3, out);
     PUT32(x2, out + 4);

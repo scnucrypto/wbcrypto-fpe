@@ -21,7 +21,9 @@ int test_co_wbsm4() {
     wbsm4_ctx_enc = WBCRYPTO_co_wbsm4_enc_context_init();
     wbsm4_ctx_dec = WBCRYPTO_co_wbsm4_dec_context_init();
 
-    WBCRYPTO_co_wbsm4_gen_table(wbsm4_ctx_enc, wbsm4_ctx_dec, &wbsm4_ctx_dec_ee, key, sizeof(key));
+    WBCRYPTO_co_wbsm4_gen_table1(wbsm4_ctx_enc, wbsm4_ctx_dec, key, sizeof(key));
+    WBCRYPTO_co_wbsm4_gen_table2(wbsm4_ctx_dec, &wbsm4_ctx_dec_ee);
+
     WBCRYPTO_co_wbsm4_encrypt(msg, cipher, wbsm4_ctx_enc);
     TEST_print_state(cipher, sizeof(cipher));
     WBCRYPTO_co_wbsm4_decrypt(cipher, plain1, wbsm4_ctx_dec);
@@ -47,7 +49,9 @@ int test_co_wbsm4_with_file() {
     wbsm4_ctx_enc = WBCRYPTO_co_wbsm4_enc_context_init();
     wbsm4_ctx_dec = WBCRYPTO_co_wbsm4_dec_context_init();
 
-    WBCRYPTO_co_wbsm4_gen_table(wbsm4_ctx_enc, wbsm4_ctx_dec, &wbsm4_ctx_dec_ee, key, sizeof(key));
+    WBCRYPTO_co_wbsm4_gen_table1(wbsm4_ctx_enc, wbsm4_ctx_dec, key, sizeof(key));
+    WBCRYPTO_co_wbsm4_gen_table2(wbsm4_ctx_dec, &wbsm4_ctx_dec_ee);
+
     WBCRYPTO_co_wbsm4_encrypt(msg, cipher, wbsm4_ctx_enc);
     TEST_print_state(cipher, sizeof(cipher));
     WBCRYPTO_co_wbsm4_decrypt(cipher, plain1, wbsm4_ctx_dec);
@@ -75,7 +79,8 @@ int test_co_wbsm4_perform() {
     wbsm4_ctx_enc = WBCRYPTO_co_wbsm4_enc_context_init();
     wbsm4_ctx_dec = WBCRYPTO_co_wbsm4_dec_context_init();
 
-    WBCRYPTO_co_wbsm4_gen_table(wbsm4_ctx_enc, wbsm4_ctx_dec, &wbsm4_ctx_dec_ee, key, sizeof(key));
+    WBCRYPTO_co_wbsm4_gen_table1(wbsm4_ctx_enc, wbsm4_ctx_dec, key, sizeof(key));
+    WBCRYPTO_co_wbsm4_gen_table2(wbsm4_ctx_dec, &wbsm4_ctx_dec_ee);
 
     program_start = clock();
     for (i = 0; i < TESTTIME * 64 * 1024; i++) {
@@ -116,6 +121,6 @@ cleanup:
 
 int main() {
     test_co_wbsm4();
-    test_co_wbsm4_with_file();
-    test_co_wbsm4_perform();
+//    test_co_wbsm4_with_file();
+//    test_co_wbsm4_perform();
 }

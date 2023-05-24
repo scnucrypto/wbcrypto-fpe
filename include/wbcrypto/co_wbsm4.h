@@ -40,7 +40,8 @@ extern "C" {
     void WBCRYPTO_co_wbsm4_dec_context_free(WBCRYPTO_co_wbsm4_dec_context *ctx);
 
     /******************************************basic function**********************************************/
-    int WBCRYPTO_co_wbsm4_gen_table(WBCRYPTO_co_wbsm4_enc_context *enc_ctx, WBCRYPTO_co_wbsm4_dec_context *dec_ctx, WBCRYPTO_co_wbsm4_dec_ee_context *ee_ctx, const uint8_t *key, size_t keylen);
+    int WBCRYPTO_co_wbsm4_gen_table1(WBCRYPTO_co_wbsm4_enc_context *enc_ctx, WBCRYPTO_co_wbsm4_dec_context *dec_ctx, const uint8_t *key, size_t keylen);
+    int WBCRYPTO_co_wbsm4_gen_table2(WBCRYPTO_co_wbsm4_dec_context *dec_ctx, WBCRYPTO_co_wbsm4_dec_ee_context *ee_ctx);
 
     int WBCRYPTO_co_wbsm4_encrypt(const unsigned char *input, unsigned char *output, WBCRYPTO_co_wbsm4_enc_context *ctx);
 
