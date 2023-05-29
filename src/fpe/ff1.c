@@ -215,13 +215,6 @@ int WBCRYPTO_ff1_decrypt(WBCRYPTO_fpe_context *ctx, const char *input, char *out
         char little;
     } is_endian = {1};
 
-    // AES_KEY aes_enc_ctx;
-    // const uint8_t userKey[] = {
-    //     0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
-    //     0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
-    // };
-    // AES_set_encrypt_key(userKey, 128, &aes_enc_ctx);
-
     unsigned int inlen = strlen(input);
     unsigned int in[inlen], out[inlen];
     map_chars(input, in);

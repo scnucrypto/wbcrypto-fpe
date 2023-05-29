@@ -119,8 +119,36 @@ cleanup:
     return ret;
 }
 
+//int test_co_wbsm4_fpe() {
+//    const char input[] = "13888888888";
+//    const char tweak[] = "";
+//    char cipher[16] = {0};
+//    char plain1[16] = {0};
+//    char plain2[16] = {0};
+//
+//    WBCRYPTO_co_wbsm4_enc_context *wbsm4_ctx_enc = WBCRYPTO_co_wbsm4_enc_context_init();;
+//    WBCRYPTO_co_wbsm4_dec_context *wbsm4_ctx_dec = WBCRYPTO_co_wbsm4_dec_context_init();
+//    WBCRYPTO_co_wbsm4_dec_ee_context wbsm4_ctx_dec_ee;
+//    WBCRYPTO_co_wbsm4_gen_table1(wbsm4_ctx_enc, wbsm4_ctx_dec, key, sizeof(key));
+//    WBCRYPTO_co_wbsm4_gen_table2(wbsm4_ctx_dec, &wbsm4_ctx_dec_ee);
+//
+//    WBCRYPTO_fpe_context *fpe_ctx_enc = WBCRYPTO_co_wbsm4_enc_fpe_init(wbsm4_ctx_enc, tweak, sizeof(tweak), 10);
+//    WBCRYPTO_fpe_context *fpe_ctx_dec1 = WBCRYPTO_co_wbsm4_dec_fpe_init(wbsm4_ctx_dec, tweak, sizeof(tweak), 10);
+//    WBCRYPTO_fpe_context *fpe_ctx_dec2 = WBCRYPTO_co_wbsm4_dec_ee_fpe_init(&wbsm4_ctx_dec_ee, tweak, sizeof(tweak), 10);
+//
+//    WBCRYPTO_ff1_encrypt(fpe_ctx_enc, input, cipher);
+//    printf("[FF1] [CO-WBSM4] encrypt answer: %s\n", cipher);
+//    WBCRYPTO_ff1_encrypt(fpe_ctx_dec1, cipher, plain1);
+//    printf("[FF1] [CO-WBSM4] decrypt-1 answer: %s\n", plain1);
+//    WBCRYPTO_ff1_encrypt(fpe_ctx_dec2, plain1, plain2);
+//    printf("[FF1] [CO-WBSM4] decrypt-2 answer: %s\n", plain2);
+//
+//    return 1;
+//}
+
 int main() {
     test_co_wbsm4();
-//    test_co_wbsm4_with_file();
-//    test_co_wbsm4_perform();
+    test_co_wbsm4_with_file();
+    test_co_wbsm4_perform();
+//    test_co_wbsm4_fpe();
 }

@@ -24,7 +24,7 @@ int test_aes_fpe() {
 
     WBCRYPTO_aes_context *aes_ctx = WBCRYPTO_aes_context_init();
     WBCRYPTO_aes_init_key(aes_ctx, key, sizeof(key));
-    WBCRYPTO_fpe_context *fpe_ctx = WBCRYPTO_aes_fpe_init(aes_ctx, tweak, sizeof(tweak), 12);
+    WBCRYPTO_fpe_context *fpe_ctx = WBCRYPTO_aes_fpe_init(aes_ctx, tweak, sizeof(tweak), 10);
     program_start = clock();
     for (i = 0; i < TESTTIME * 64 * 1024; i++) {
         WBCRYPTO_ff1_encrypt(fpe_ctx, input, cipher);
@@ -70,7 +70,7 @@ int test_sm4_fpe() {
 
     WBCRYPTO_sm4_context *sm4_ctx = WBCRYPTO_sm4_context_init();
     WBCRYPTO_sm4_init_key(sm4_ctx, key, sizeof(key));
-    WBCRYPTO_fpe_context *fpe_ctx = WBCRYPTO_sm4_fpe_init(sm4_ctx, tweak, sizeof(tweak), 12);
+    WBCRYPTO_fpe_context *fpe_ctx = WBCRYPTO_sm4_fpe_init(sm4_ctx, tweak, sizeof(tweak), 10);
     program_start = clock();
     for (i = 0; i < TESTTIME * 64 * 1024; i++) {
         WBCRYPTO_ff1_encrypt(fpe_ctx, input, cipher);

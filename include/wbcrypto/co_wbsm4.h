@@ -60,7 +60,9 @@ extern "C" {
     int WBCRYPTO_co_wbsm4_dec_ee_file2key(WBCRYPTO_co_wbsm4_dec_ee_context *ctx, char *fpath);
 
     /******************************************fpe mode*********************************************/
-//    WBCRYPTO_fpe_context *WBCRYPTO_wbsm4_fpe_init(WBCRYPTO_wbsm4_context *key, const char *twkbuf, size_t twklen, unsigned int radix);
+//    WBCRYPTO_fpe_context *WBCRYPTO_co_wbsm4_enc_fpe_init(WBCRYPTO_co_wbsm4_enc_context *key, const char *twkbuf, size_t twklen, unsigned int radix);
+//    WBCRYPTO_fpe_context *WBCRYPTO_co_wbsm4_dec_fpe_init(WBCRYPTO_co_wbsm4_dec_context *key, const char *twkbuf, size_t twklen, unsigned int radix);
+//    WBCRYPTO_fpe_context *WBCRYPTO_co_wbsm4_dec_ee_fpe_init(WBCRYPTO_co_wbsm4_dec_ee_context *key, const char *twkbuf, size_t twklen, unsigned int radix);
 
 #ifdef __cplusplus
 }
