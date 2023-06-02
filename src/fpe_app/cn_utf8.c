@@ -1,12 +1,9 @@
 #include <wbcrypto/fpe_app.h>
-#include <wbcrypto/aes.h>
-#include <wbcrypto/sm4.h>
 #include <wbcrypto/wbsm4.h>
 #include <string.h>
-#include <ctype.h>
 #include "utf8_util.h"
 
-int aux_fpe_cn(WBCRYPTO_fpe_app_context *ctx, char *cn, char *sample, char *after_cn, fpe_block128_f block) {
+int aux_fpe_cn(WBCRYPTO_wbsm4_context *ctx, char *cn, char *sample, char *after_cn, fpe_block128_f block) {
     int ret = 0;
     int len = strlen(cn) / 3;
     int i, tweak_len = 0;
@@ -51,15 +48,7 @@ int aux_fpe_cn(WBCRYPTO_fpe_app_context *ctx, char *cn, char *sample, char *afte
     tweak[tweak_len * 4] = '\0';
 
     WBCRYPTO_fpe_context *fpe_ctx = NULL;
-    if (strcmp(ctx->cipher, WBCYRPTO_FPE_CIPHER_SM4) == 0) {
-        fpe_ctx = WBCRYPTO_sm4_fpe_init(ctx->cipher_ctx, tweak, sizeof(tweak), 12);
-    } else if (strcmp(ctx->cipher, WBCYRPTO_FPE_CIPHER_WBSM4) == 0) {
-        fpe_ctx = WBCRYPTO_wbsm4_fpe_init(ctx->cipher_ctx, tweak, sizeof(tweak), 12);
-    } else if (strcmp(ctx->cipher, WBCYRPTO_FPE_CIPHER_AES) == 0) {
-        fpe_ctx = WBCRYPTO_aes_fpe_init(ctx->cipher_ctx, tweak, sizeof(tweak), 12);
-    } else { // default: aes
-        fpe_ctx = WBCRYPTO_aes_fpe_init(ctx->cipher_ctx, tweak, sizeof(tweak), 12);
-    }
+    fpe_ctx = WBCRYPTO_wbsm4_fpe_init(ctx, tweak, sizeof(tweak), 12);
     (*block)(fpe_ctx, input, ans);
 
     char *ori_add = cn;
@@ -93,34 +82,22 @@ cleanup:
     return ret;
 }
 
-int WBCRYPTO_fpe_encrypt_cn_utf8(WBCRYPTO_fpe_app_context *ctx, char *cn, char *after_cn) {
+int WBCRYPTO_fpe_encrypt_cn_utf8(WBCRYPTO_wbsm4_context *ctx, char *cn, char *after_cn) {
     return WBCRYPTO_fpe_encrypt_cn_utf8_with_sample(ctx, cn, after_cn, "");
 }
 
-int WBCRYPTO_fpe_decrypt_cn_utf8(WBCRYPTO_fpe_app_context *ctx, char *cn, char *after_cn) {
+int WBCRYPTO_fpe_decrypt_cn_utf8(WBCRYPTO_wbsm4_context *ctx, char *cn, char *after_cn) {
     return WBCRYPTO_fpe_decrypt_cn_utf8_with_sample(ctx, cn, after_cn, "");
 }
 
-int WBCRYPTO_fpe_encrypt_cn_utf8_with_sample(WBCRYPTO_fpe_app_context *ctx, char *cn, char *after_cn, char *sample) {
+int WBCRYPTO_fpe_encrypt_cn_utf8_with_sample(WBCRYPTO_wbsm4_context *ctx, char *cn, char *after_cn, char *sample) {
     fpe_block128_f block;
-    if (strcmp(ctx->ffx, WBCYRPTO_FPE_FFX_FF1) == 0) {
-        block = (fpe_block128_f) WBCRYPTO_ff1_encrypt;
-    } else if (strcmp(ctx->ffx, WBCYRPTO_FPE_FFX_FF3) == 0) {
-        block = (fpe_block128_f) WBCRYPTO_ff3_encrypt;
-    } else { // default: ff3-1
-        block = (fpe_block128_f) WBCRYPTO_ff3_encrypt;
-    }
+    block = (fpe_block128_f) WBCRYPTO_ff1_encrypt;
     return aux_fpe_cn(ctx, cn, sample, after_cn, block);
 }
 
-int WBCRYPTO_fpe_decrypt_cn_utf8_with_sample(WBCRYPTO_fpe_app_context *ctx, char *cn, char *after_cn, char *sample) {
+int WBCRYPTO_fpe_decrypt_cn_utf8_with_sample(WBCRYPTO_wbsm4_context *ctx, char *cn, char *after_cn, char *sample) {
     fpe_block128_f block;
-    if (strcmp(ctx->ffx, WBCYRPTO_FPE_FFX_FF1) == 0) {
-        block = (fpe_block128_f) WBCRYPTO_ff1_decrypt;
-    } else if (strcmp(ctx->ffx, WBCYRPTO_FPE_FFX_FF3) == 0) {
-        block = (fpe_block128_f) WBCRYPTO_ff3_decrypt;
-    } else { // default: ff3-1
-        block = (fpe_block128_f) WBCRYPTO_ff3_decrypt;
-    }
+    block = (fpe_block128_f) WBCRYPTO_ff1_decrypt;
     return aux_fpe_cn(ctx, cn, sample, after_cn, block);
 }

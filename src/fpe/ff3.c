@@ -104,7 +104,6 @@ int WBCRYPTO_ff3_encrypt(WBCRYPTO_fpe_context *ctx, const char *input, char *out
 
         // iii
         rev_bytes(P, 16);
-        // AES_encrypt(P, S, &aes_enc_ctx);
         (*ctx->block)(P, S, ctx->cipher_ctx);
         rev_bytes(S, 16);
 
@@ -149,14 +148,6 @@ int WBCRYPTO_ff3_decrypt(WBCRYPTO_fpe_context *ctx, const char *input, char *out
             *qpow_v = BN_new();
     BN_CTX *bn_ctx = BN_CTX_new();
 
-    // AES_KEY aes_enc_ctx;
-    // const uint8_t userKey[] = {
-    //     0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
-    //     0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
-    // };
-    // AES_set_encrypt_key(userKey, 128, &aes_enc_ctx);
-
-
     unsigned int inlen = strlen(input);
     unsigned int in[inlen], out[inlen];
     map_chars(input, in);
@@ -195,7 +186,6 @@ int WBCRYPTO_ff3_decrypt(WBCRYPTO_fpe_context *ctx, const char *input, char *out
         // iii
         rev_bytes(P, 16);
         memset(S, 0x00, sizeof(S));
-        // AES_encrypt(P, S, &aes_enc_ctx);
         (*ctx->block)(P, S, ctx->cipher_ctx);
         rev_bytes(S, 16);
 

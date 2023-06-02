@@ -130,14 +130,12 @@ int WBCRYPTO_ff1_encrypt(WBCRYPTO_fpe_context *ctx, const char *input, char *out
         memcpy(Q + qtmp, Bytes, BytesLen);
 
         // ii PRF(P || Q), P is always 16 bytes long
-        // AES_encrypt(P, R, &aes_enc_ctx);
         (*ctx->block)(P, R, ctx->cipher_ctx);
         int count = Qlen / 16;
         unsigned char Ri[16];
         unsigned char *Qi = Q;
         for (int cc = 0; cc < count; ++cc) {
             for (int j = 0; j < 16; ++j) Ri[j] = Qi[j] ^ R[j];
-            // AES_encrypt(Ri, R, &aes_enc_ctx);
             (*ctx->block)(Ri, R, ctx->cipher_ctx);
             Qi += 16;
         }
@@ -160,7 +158,6 @@ int WBCRYPTO_ff1_encrypt(WBCRYPTO_fpe_context *ctx, const char *input, char *out
             } else *((unsigned int *) tmp + 3) = j;
 
             for (int k = 0; k < 16; ++k) tmp[k] ^= R[k];
-            // AES_encrypt(tmp, SS, &aes_enc_ctx);
             (*ctx->block)(tmp, SS, ctx->cipher_ctx);
             assert((S + 16 * j)[0] == 0x00);
             assert(16 + 16 * j <= Slen);
@@ -214,13 +211,6 @@ int WBCRYPTO_ff1_decrypt(WBCRYPTO_fpe_context *ctx, const char *input, char *out
         long one;
         char little;
     } is_endian = {1};
-
-    // AES_KEY aes_enc_ctx;
-    // const uint8_t userKey[] = {
-    //     0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
-    //     0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c,
-    // };
-    // AES_set_encrypt_key(userKey, 128, &aes_enc_ctx);
 
     unsigned int inlen = strlen(input);
     unsigned int in[inlen], out[inlen];
@@ -288,14 +278,12 @@ int WBCRYPTO_ff1_decrypt(WBCRYPTO_fpe_context *ctx, const char *input, char *out
 
         // ii PRF(P || Q)
         memset(R, 0x00, sizeof(R));
-        // AES_encrypt(P, R, &aes_enc_ctx);
         (*ctx->block)(P, R, ctx->cipher_ctx);
         int count = Qlen / 16;
         unsigned char Ri[16];
         unsigned char *Qi = Q;
         for (int cc = 0; cc < count; ++cc) {
             for (int j = 0; j < 16; ++j) Ri[j] = Qi[j] ^ R[j];
-            // AES_encrypt(Ri, R, &aes_enc_ctx);
             (*ctx->block)(Ri, R, ctx->cipher_ctx);
             Qi += 16;
         }
@@ -317,7 +305,6 @@ int WBCRYPTO_ff1_decrypt(WBCRYPTO_fpe_context *ctx, const char *input, char *out
             } else *((unsigned int *) tmp + 3) = j;
 
             for (int k = 0; k < 16; ++k) tmp[k] ^= R[k];
-            // AES_encrypt(tmp, SS, &aes_enc_ctx);
             (*ctx->block)(tmp, SS, ctx->cipher_ctx);
             assert((S + 16 * j)[0] == 0x00);
             memcpy(S + 16 * j, SS, 16);
