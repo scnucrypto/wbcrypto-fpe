@@ -9,7 +9,6 @@
 #include <wbcrypto/error.h>
 #include <wbcrypto/utils.h>
 
-
 #ifdef  __cplusplus
 extern "C" {
 #endif

@@ -219,6 +219,7 @@ int WBCRYPTO_wbsm4_gen_table(WBCRYPTO_wbsm4_context *wbsm4_ctx,
 
     ret=1;
 cleanup:
+    WBCRYPTO_sm4_context_free(sm4_key);
     return ret;
 }
 

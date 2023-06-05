@@ -3,7 +3,7 @@
 #include <wbcrypto/fpe_app.h>
 #include <time.h>
 
-#define TESTTIME 10000
+#define TESTTIME 100
 
 int test_key_to_file() {
     int i;
@@ -22,11 +22,9 @@ int test_key_to_file() {
     WBCRYPTO_wbsm4_context *wbsm4_ctx2 = WBCRYPTO_wbsm4_context_init(1);
     WBCRYPTO_wbsm4_file2key(wbsm4_ctx2, "/home/xie/enc.whibox");
 
-    WBCRYPTO_fpe_app_context app_ctx;
-    WBCRYPTO_fpe_app_init(&app_ctx, wbsm4_ctx2, WBCYRPTO_FPE_CIPHER_WBSM4, WBCYRPTO_FPE_FFX_FF1);
-    WBCRYPTO_fpe_encrypt_cn_utf8(&app_ctx, input, cipher);
+    WBCRYPTO_fpe_encrypt_cn_utf8(wbsm4_ctx2, input, cipher);
     printf("[FPE address] encrypt answer: %s\n", cipher);
-    WBCRYPTO_fpe_decrypt_cn_utf8(&app_ctx, cipher, plain);
+    WBCRYPTO_fpe_decrypt_cn_utf8(wbsm4_ctx2, cipher, plain);
     printf("[FPE address] decrypt answer: %s\n", plain);
 }
 
@@ -51,9 +49,7 @@ int test_key2file_perform() {
     for (i = 0; i < TESTTIME; i++) {
         WBCRYPTO_wbsm4_context *wbsm4_ctx2 = WBCRYPTO_wbsm4_context_init(1);
         WBCRYPTO_wbsm4_file2key(wbsm4_ctx2, "/home/xie/enc.whibox");
-        WBCRYPTO_fpe_app_context app_ctx;
-        WBCRYPTO_fpe_app_init(&app_ctx, wbsm4_ctx, WBCYRPTO_FPE_CIPHER_WBSM4, WBCYRPTO_FPE_FFX_FF1);
-        WBCRYPTO_fpe_encrypt_phone_with_sample(&app_ctx, input, cipher, sample);
+        WBCRYPTO_fpe_encrypt_phone_with_sample(wbsm4_ctx2, input, cipher, sample);
     }
     program_end = clock();
     ts = program_end - program_start;

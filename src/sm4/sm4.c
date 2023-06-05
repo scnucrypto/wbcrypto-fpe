@@ -82,37 +82,33 @@ static const uint32_t SM4_SBOX_T[256] = {
         0x35F2C7C7, 0x2D092424, 0xD1C61717, 0xD66FB9B9, 0xDEC51B1B, 0x94861212,
         0x78186060, 0x30F3C3C3, 0x897CF5F5, 0x5CEFB3B3, 0xD23AE8E8, 0xACDF7373,
         0x794C3535, 0xA0208080, 0x9D78E5E5, 0x56EDBBBB, 0x235E7D7D, 0xC63EF8F8,
-        0x8BD45F5F, 0xE7C82F2F, 0xDD39E4E4, 0x68492121 };
+        0x8BD45F5F, 0xE7C82F2F, 0xDD39E4E4, 0x68492121};
 
-static inline uint32_t rotl(uint32_t a, uint8_t n)
-{
+static inline uint32_t rotl(uint32_t a, uint8_t n) {
     return (a << n) | (a >> (32 - n));
 }
 
-static inline uint32_t load_u32_be(const uint8_t *b, uint32_t n)
-{
-    return ((uint32_t)b[4 * n] << 24) |
-        ((uint32_t)b[4 * n + 1] << 16) |
-        ((uint32_t)b[4 * n + 2] << 8) |
-        ((uint32_t)b[4 * n + 3]);
+static inline uint32_t load_u32_be(const uint8_t *b, uint32_t n) {
+    return ((uint32_t) b[4 * n] << 24) |
+           ((uint32_t) b[4 * n + 1] << 16) |
+           ((uint32_t) b[4 * n + 2] << 8) |
+           ((uint32_t) b[4 * n + 3]);
 }
 
-static inline void store_u32_be(uint32_t v, uint8_t *b)
-{
-    b[0] = (uint8_t)(v >> 24);
-    b[1] = (uint8_t)(v >> 16);
-    b[2] = (uint8_t)(v >> 8);
-    b[3] = (uint8_t)(v);
+static inline void store_u32_be(uint32_t v, uint8_t *b) {
+    b[0] = (uint8_t) (v >> 24);
+    b[1] = (uint8_t) (v >> 16);
+    b[2] = (uint8_t) (v >> 8);
+    b[3] = (uint8_t) (v);
 }
 
-static inline uint32_t SM4_T_slow(uint32_t X)
-{
+static inline uint32_t SM4_T_slow(uint32_t X) {
     uint32_t t = 0;
 
-    t |= ((uint32_t)SM4_S[(uint8_t)(X >> 24)]) << 24;
-    t |= ((uint32_t)SM4_S[(uint8_t)(X >> 16)]) << 16;
-    t |= ((uint32_t)SM4_S[(uint8_t)(X >> 8)]) << 8;
-    t |= SM4_S[(uint8_t)X];
+    t |= ((uint32_t) SM4_S[(uint8_t) (X >> 24)]) << 24;
+    t |= ((uint32_t) SM4_S[(uint8_t) (X >> 16)]) << 16;
+    t |= ((uint32_t) SM4_S[(uint8_t) (X >> 8)]) << 8;
+    t |= SM4_S[(uint8_t) X];
 
     /*
      * L linear transform
@@ -120,32 +116,34 @@ static inline uint32_t SM4_T_slow(uint32_t X)
     return t ^ rotl(t, 2) ^ rotl(t, 10) ^ rotl(t, 18) ^ rotl(t, 24);
 }
 
-static inline uint32_t SM4_T(uint32_t X)
-{
-    return SM4_SBOX_T[(uint8_t)(X >> 24)] ^
-        rotl(SM4_SBOX_T[(uint8_t)(X >> 16)], 24) ^
-        rotl(SM4_SBOX_T[(uint8_t)(X >> 8)], 16) ^
-        rotl(SM4_SBOX_T[(uint8_t)X], 8);
+static inline uint32_t SM4_T(uint32_t X) {
+    return SM4_SBOX_T[(uint8_t) (X >> 24)] ^
+           rotl(SM4_SBOX_T[(uint8_t) (X >> 16)], 24) ^
+           rotl(SM4_SBOX_T[(uint8_t) (X >> 8)], 16) ^
+           rotl(SM4_SBOX_T[(uint8_t) X], 8);
 }
 
-WBCRYPTO_sm4_context *WBCRYPTO_sm4_context_init(){
-    struct sm4_context *ctx=malloc(sizeof(struct sm4_context));
-    if(ctx==NULL){
-        WBCRYPTO_THROW_REASON("WBCRYPTO_sm4_context_init",WBCRYPTO_ERR_ALLOC_FAILED);
+WBCRYPTO_sm4_context *WBCRYPTO_sm4_context_init() {
+    struct sm4_context *ctx = malloc(sizeof(struct sm4_context));
+    if (ctx == NULL) {
+        WBCRYPTO_THROW_REASON("WBCRYPTO_sm4_context_init", WBCRYPTO_ERR_ALLOC_FAILED);
     }
-    memset(ctx,0,sizeof(struct sm4_context));
+    memset(ctx, 0, sizeof(struct sm4_context));
     return ctx;
 cleanup:
     return NULL;
 }
 
-void WBCRYPTO_sm4_context_free(WBCRYPTO_sm4_context *ctx){
-    memset(ctx,0,sizeof(struct sm4_context));
+void WBCRYPTO_sm4_context_free(WBCRYPTO_sm4_context *ctx) {
+    memset(ctx, 0, sizeof(struct sm4_context));
+//    if (ctx != NULL) {
+//        free(ctx);
+//    }
 }
 
-int aux_sm4_init_key(WBCRYPTO_sm4_context *ctx, const uint8_t *key, size_t keylen, int encmode){
-    int ret=0;
-    uint8_t *padkey = (uint8_t *)malloc(16*sizeof(uint8_t));
+int aux_sm4_init_key(WBCRYPTO_sm4_context *ctx, const uint8_t *key, size_t keylen, int encmode) {
+    int ret = 0;
+    uint8_t *padkey = (uint8_t *) malloc(16 * sizeof(uint8_t));
 
     WBCRYPTO_key_padding_pkcs7(key, keylen, padkey);   //Operation after key-padding
 
@@ -153,20 +151,20 @@ int aux_sm4_init_key(WBCRYPTO_sm4_context *ctx, const uint8_t *key, size_t keyle
      * Family Key
      */
     static const uint32_t FK[4] =
-        { 0xa3b1bac6, 0x56aa3350, 0x677d9197, 0xb27022dc };
+            {0xa3b1bac6, 0x56aa3350, 0x677d9197, 0xb27022dc};
 
     /*
      * Constant Key
      */
     static const uint32_t CK[32] = {
-        0x00070E15, 0x1C232A31, 0x383F464D, 0x545B6269,
-        0x70777E85, 0x8C939AA1, 0xA8AFB6BD, 0xC4CBD2D9,
-        0xE0E7EEF5, 0xFC030A11, 0x181F262D, 0x343B4249,
-        0x50575E65, 0x6C737A81, 0x888F969D, 0xA4ABB2B9,
-        0xC0C7CED5, 0xDCE3EAF1, 0xF8FF060D, 0x141B2229,
-        0x30373E45, 0x4C535A61, 0x686F767D, 0x848B9299,
-        0xA0A7AEB5, 0xBCC3CAD1, 0xD8DFE6ED, 0xF4FB0209,
-        0x10171E25, 0x2C333A41, 0x484F565D, 0x646B7279
+            0x00070E15, 0x1C232A31, 0x383F464D, 0x545B6269,
+            0x70777E85, 0x8C939AA1, 0xA8AFB6BD, 0xC4CBD2D9,
+            0xE0E7EEF5, 0xFC030A11, 0x181F262D, 0x343B4249,
+            0x50575E65, 0x6C737A81, 0x888F969D, 0xA4ABB2B9,
+            0xC0C7CED5, 0xDCE3EAF1, 0xF8FF060D, 0x141B2229,
+            0x30373E45, 0x4C535A61, 0x686F767D, 0x848B9299,
+            0xA0A7AEB5, 0xBCC3CAD1, 0xD8DFE6ED, 0xF4FB0209,
+            0x10171E25, 0x2C333A41, 0x484F565D, 0x646B7279
     };
 
     uint32_t K[4];
@@ -181,26 +179,26 @@ int aux_sm4_init_key(WBCRYPTO_sm4_context *ctx, const uint8_t *key, size_t keyle
         uint32_t X = K[(i + 1) % 4] ^ K[(i + 2) % 4] ^ K[(i + 3) % 4] ^ CK[i];
         uint32_t t = 0;
 
-        t |= ((uint32_t)SM4_S[(uint8_t)(X >> 24)]) << 24;
-        t |= ((uint32_t)SM4_S[(uint8_t)(X >> 16)]) << 16;
-        t |= ((uint32_t)SM4_S[(uint8_t)(X >> 8)]) << 8;
-        t |= SM4_S[(uint8_t)X];
+        t |= ((uint32_t) SM4_S[(uint8_t) (X >> 24)]) << 24;
+        t |= ((uint32_t) SM4_S[(uint8_t) (X >> 16)]) << 16;
+        t |= ((uint32_t) SM4_S[(uint8_t) (X >> 8)]) << 8;
+        t |= SM4_S[(uint8_t) X];
 
         t = t ^ rotl(t, 13) ^ rotl(t, 23);
         K[i % 4] ^= t;
-        if(encmode == WBCRYPTO_ENCRYPT_MODE) {
+        if (encmode == WBCRYPTO_ENCRYPT_MODE) {
             ctx->rk[i] = K[i % 4];
-        } else if(encmode == WBCRYPTO_DECRYPT_MODE){
-            ctx->rk[31-i] = K[i % 4];
+        } else if (encmode == WBCRYPTO_DECRYPT_MODE) {
+            ctx->rk[31 - i] = K[i % 4];
         }
     }
-    ret=1;
+    ret = 1;
 cleanup:
     free(padkey);
     return ret;
 }
 
-int WBCRYPTO_sm4_init_key(WBCRYPTO_sm4_context *ctx, const uint8_t *key, size_t keylen){
+int WBCRYPTO_sm4_init_key(WBCRYPTO_sm4_context *ctx, const uint8_t *key, size_t keylen) {
     return aux_sm4_init_key(ctx, key, keylen, WBCRYPTO_ENCRYPT_MODE);
 }
 
@@ -212,8 +210,8 @@ int WBCRYPTO_sm4_init_key(WBCRYPTO_sm4_context *ctx, const uint8_t *key, size_t 
          B3 ^= F(B0 ^ B1 ^ B2 ^ ctx->rk[k3]); \
       } while(0)
 
-int WBCRYPTO_sm4_encrypt(const unsigned char *in, unsigned char *out, WBCRYPTO_sm4_context *ctx){
-    int ret=0;
+int WBCRYPTO_sm4_encrypt(const unsigned char *in, unsigned char *out, WBCRYPTO_sm4_context *ctx) {
+    int ret = 0;
     uint32_t B0 = load_u32_be(in, 0);
     uint32_t B1 = load_u32_be(in, 1);
     uint32_t B2 = load_u32_be(in, 2);
@@ -223,9 +221,9 @@ int WBCRYPTO_sm4_encrypt(const unsigned char *in, unsigned char *out, WBCRYPTO_s
      * Uses byte-wise sbox in the first and last rounds to provide some
      * protection from cache based side channels.
      */
-    SM4_RNDS( 0,  1,  2,  3, SM4_T_slow);
-    SM4_RNDS( 4,  5,  6,  7, SM4_T);
-    SM4_RNDS( 8,  9, 10, 11, SM4_T);
+    SM4_RNDS(0, 1, 2, 3, SM4_T_slow);
+    SM4_RNDS(4, 5, 6, 7, SM4_T);
+    SM4_RNDS(8, 9, 10, 11, SM4_T);
     SM4_RNDS(12, 13, 14, 15, SM4_T);
     SM4_RNDS(16, 17, 18, 19, SM4_T);
     SM4_RNDS(20, 21, 22, 23, SM4_T);
@@ -236,13 +234,13 @@ int WBCRYPTO_sm4_encrypt(const unsigned char *in, unsigned char *out, WBCRYPTO_s
     store_u32_be(B2, out + 4);
     store_u32_be(B1, out + 8);
     store_u32_be(B0, out + 12);
-    ret=1;
+    ret = 1;
 cleanup:
     return ret;
 }
 
-int WBCRYPTO_sm4_decrypt(const unsigned char *in, unsigned char *out, WBCRYPTO_sm4_context *ctx){
-    int ret=0;
+int WBCRYPTO_sm4_decrypt(const unsigned char *in, unsigned char *out, WBCRYPTO_sm4_context *ctx) {
+    int ret = 0;
     uint32_t B0 = load_u32_be(in, 0);
     uint32_t B1 = load_u32_be(in, 1);
     uint32_t B2 = load_u32_be(in, 2);
@@ -253,15 +251,15 @@ int WBCRYPTO_sm4_decrypt(const unsigned char *in, unsigned char *out, WBCRYPTO_s
     SM4_RNDS(23, 22, 21, 20, SM4_T);
     SM4_RNDS(19, 18, 17, 16, SM4_T);
     SM4_RNDS(15, 14, 13, 12, SM4_T);
-    SM4_RNDS(11, 10,  9,  8, SM4_T);
-    SM4_RNDS( 7,  6,  5,  4, SM4_T);
-    SM4_RNDS( 3,  2,  1,  0, SM4_T_slow);
+    SM4_RNDS(11, 10, 9, 8, SM4_T);
+    SM4_RNDS(7, 6, 5, 4, SM4_T);
+    SM4_RNDS(3, 2, 1, 0, SM4_T_slow);
 
     store_u32_be(B3, out);
     store_u32_be(B2, out + 4);
     store_u32_be(B1, out + 8);
     store_u32_be(B0, out + 12);
-    ret=1;
+    ret = 1;
 cleanup:
     return ret;
 }

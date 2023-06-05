@@ -37,6 +37,8 @@ int test_fpe_phone() {
     printf("[FPE Phone with sample] encrypt answer: %s\n", cipher);
     WBCRYPTO_fpe_decrypt_phone_with_sample(wbsm4_ctx, cipher, plain, sample);
     printf("[FPE Phone with sample] decrypt answer: %s\n", plain);
+
+    WBCRYPTO_wbsm4_context_free(wbsm4_ctx);
 }
 
 int test_fpe_idcard() {
@@ -70,6 +72,8 @@ int test_fpe_idcard() {
     printf("[FPE idcard with sample] encrypt answer: %s\n", cipher);
     WBCRYPTO_fpe_decrypt_idcard_with_sample(wbsm4_ctx, cipher, plain, sample);
     printf("[FPE idcard with sample] decrypt answer: %s\n", plain);
+
+    WBCRYPTO_wbsm4_context_free(wbsm4_ctx);
 }
 
 int test_fpe_address() {
@@ -104,6 +108,8 @@ int test_fpe_address() {
     printf("[FPE address with sample] encrypt answer: %s\n", cipher);
     WBCRYPTO_fpe_decrypt_cn_utf8_with_sample(wbsm4_ctx, cipher, plain, sample);
     printf("[FPE address with sample] decrypt answer: %s\n", plain);
+
+    WBCRYPTO_wbsm4_context_free(wbsm4_ctx);
 }
 
 int main() {
